@@ -121,7 +121,7 @@ jobs:
           path: downloads
           key: ${{ runner.os }}-x64-${{ hashFiles('urls.txt') }}
 
-      - name: Download dependencies
+      - name: Download and extract dependencies
         shell: cmd
         run: |
           path C:\Program Files\7-Zip;%PYTHON_DIR%;%PYTHON3_DIR%;%PERL_DIR%\bin;%path%;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib
@@ -142,7 +142,7 @@ jobs:
           copy /Y D:\winpty\%WARCH%\bin\winpty.dll        vim\src\winpty64.dll
           copy /Y D:\winpty\%WARCH%\bin\winpty-agent.exe  vim\src\
 
-          echo %COL_GREEN%Download libintl.dll and iconv.dll%COL_RESET%
+          echo %COL_GREEN%Download GetText libintl.dll and iconv.dll%COL_RESET%
           call :downloadfile %GETTEXT_URL% downloads\gettext64.zip
           7z e -y downloads\gettext64.zip -oD:\gettext64 > nul || exit 1
           copy /Y D:\gettext64\libiconv-2.dll   vim\src\
@@ -160,6 +160,7 @@ jobs:
           echo on
           nmake .config.h.time || exit 1
           xcopy /s .ext\include %RUBY_DIR%\include\ruby-%RUBY_API_VER_LONG%
+          echo off
           popd
 
           echo %COL_GREEN%Download Libsodium%COL_RESET% 
