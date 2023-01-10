@@ -50,10 +50,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { features: HUGE,   toolchain: msvc,  VIMDLL: yes,  GUI: no,  arch: x64 }
-          - { features: HUGE,   toolchain: msvc,  VIMDLL: yes,  GUI: no,  arch: x86 }
-          - { features: HUGE,   toolchain: msvc,  VIMDLL: yes,  GUI: yes, arch: x64 }
-          - { features: HUGE,   toolchain: msvc,  VIMDLL: yes,  GUI: yes, arch: x86 }
+          - { GUI: no }
+          - { GUI: yes }
 
     steps:
       - name: Initialize
@@ -65,30 +63,16 @@ jobs:
 
           git config --global core.autocrlf input
 
-          if [ "${{ matrix.arch }}" = "x64" ]; then
-            cygreg=registry
-            pyreg=
-            echo "VCARCH=amd64" >> $GITHUB_ENV
-            echo "WARCH=x64" >> $GITHUB_ENV
-            echo "BITS=64" >> $GITHUB_ENV
-            echo "MSYSTEM=MINGW64" >> $GITHUB_ENV
-          else
-            cygreg=registry32
-            pyreg=-32
-            echo "VCARCH=x86" >> $GITHUB_ENV
-            echo "WARCH=ia32" >> $GITHUB_ENV
-            echo "BITS=32" >> $GITHUB_ENV
-            echo "MSYSTEM=MINGW32" >> $GITHUB_ENV
-          fi
+          cygreg=registry
+          pyreg=
+          echo "VCARCH=amd64" >> $GITHUB_ENV
+          echo "WARCH=x64" >> $GITHUB_ENV
+          echo "BITS=64" >> $GITHUB_ENV
+          echo "MSYSTEM=MINGW64" >> $GITHUB_ENV
 
           echo "VCVARSALL=$(vswhere -products \* -latest -property installationPath)\\VC\\Auxiliary\\Build\\vcvarsall.bat" >> $GITHUB_ENV
-          if [ "${{ matrix.features }}" != "TINY" ]; then
-            if [ "${{ matrix.arch }}" = "x86" ]; then
-              choco install python2 --no-progress --forcex86
-            else
-              choco install python2 --no-progress
-            fi
-          fi
+          choco install python2 --no-progress
+
           python3_dir=$(cat "/proc/$cygreg/HKEY_LOCAL_MACHINE/SOFTWARE/Python/PythonCore/${PYTHON3_VER_DOT}$pyreg/InstallPath/@")
           echo "PYTHON3_DIR=$python3_dir" >> $GITHUB_ENV
 
@@ -111,7 +95,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: downloads
-          key: ${{ runner.os }}-${{ matrix.arch }}-${{ hashFiles('urls.txt') }}
+          key: ${{ runner.os }}-x64-${{ hashFiles('urls.txt') }}
 
       - name: Download dependencies
         shell: cmd
@@ -137,28 +121,17 @@ jobs:
           goto :eof
 
       - name: Build (MSVC)
-        if: matrix.toolchain == 'msvc'
+        # if: matrix.toolchain == 'msvc'
         shell: cmd
         run: |
           call "%VCVARSALL%" %VCARCH%
           cd vim\src
-          if "${{ matrix.VIMDLL }}"=="yes" (
-            set GUI=yes
-          ) else (
-            set GUI=${{ matrix.GUI }}
-          )
-          if "${{ matrix.features }}"=="HUGE" (
-            nmake -nologo -f Make_mvc.mak ^
-              FEATURES=${{ matrix.features }} ^
-              GUI=%GUI% IME=yes ICONV=yes VIMDLL=${{ matrix.VIMDLL }} ^
-              DYNAMIC_LUA=yes LUA=%LUA_DIR% ^
-              DYNAMIC_PYTHON=yes PYTHON=%PYTHON_DIR% ^
-              DYNAMIC_PYTHON3=yes PYTHON3=%PYTHON3_DIR%
-          ) else (
-            nmake -nologo -f Make_mvc.mak ^
-              FEATURES=${{ matrix.features }} ^
-              GUI=%GUI% IME=yes ICONV=yes VIMDLL=${{ matrix.VIMDLL }}
-          )
+          nmake -nologo -f Make_mvc.mak ^
+            FEATURES=HUGE ^
+            GUI=${{ matrix.GUI }} IME=yes ICONV=yes VIMDLL=yes ^
+            DYNAMIC_LUA=yes LUA=%LUA_DIR% ^
+            DYNAMIC_PYTHON=yes PYTHON=%PYTHON_DIR% ^
+            DYNAMIC_PYTHON3=yes PYTHON3=%PYTHON3_DIR%
 
       - name: Check version
         shell: cmd
@@ -189,11 +162,11 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
         with:
-          name: vim${{ matrix.bits }}-${{ matrix.toolchain }}
+          name: vim64-msvc
           path: ./artifacts
 
       - name: Test and show the result of testing gVim
-        if: matrix.GUI == 'yes' || matrix.VIMDLL == 'yes'
+        if: matrix.GUI == 'yes'
         shell: cmd
         timeout-minutes: 15
         run: |
@@ -210,7 +183,7 @@ jobs:
           )
 
       - name: Test and show the result of testing Vim
-        if: matrix.GUI == 'no' || matrix.VIMDLL == 'yes'
+        if: matrix.GUI == 'no'
         shell: cmd
         timeout-minutes: 15
         run: |
