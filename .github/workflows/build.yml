@@ -1,0 +1,243 @@
+name: GitHub CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+# Cancels all previous workflow runs for pull requests that have not completed.
+concurrency:
+  # The concurrency group contains the workflow name and the branch name for
+  # pull requests or the commit hash for any other events.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read # to fetch code (actions/checkout)
+
+jobs:
+
+  windows:
+    runs-on: windows-2022
+
+    env:
+      # Interfaces
+      # Lua
+      LUA_VER: 54
+      LUA_VER_DOT: '5.4'
+      LUA_RELEASE: 5.4.2
+      LUA32_URL: https://downloads.sourceforge.net/luabinaries/lua-%LUA_RELEASE%_Win32_dllw6_lib.zip
+      LUA64_URL: https://downloads.sourceforge.net/luabinaries/lua-%LUA_RELEASE%_Win64_dllw6_lib.zip
+      LUA_DIR: D:\Lua
+      # do not want \L to end up in pathdef.c and compiler complaining about unknown escape sequences \l
+      LUA_DIR_SLASH: D:/Lua
+      # Python 2
+      PYTHON_VER: 27
+      PYTHON_VER_DOT: '2.7'
+      PYTHON_DIR: 'C:\Python27'
+      # Python 3
+      PYTHON3_VER: 311
+      PYTHON3_VER_DOT: '3.11'
+      # Other dependencies
+      # winpty
+      WINPTY_URL: https://github.com/rprichard/winpty/releases/download/0.4.3/winpty-0.4.3-msvc2015.zip
+      # Escape sequences
+      COL_RED: "\x1b[31m"
+      COL_GREEN: "\x1b[32m"
+      COL_YELLOW: "\x1b[33m"
+      COL_RESET: "\x1b[m"
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { features: HUGE,   toolchain: msvc,  VIMDLL: yes,  GUI: no,  arch: x64 }
+          - { features: HUGE,   toolchain: msvc,  VIMDLL: yes,  GUI: no,  arch: x86 }
+          - { features: HUGE,   toolchain: msvc,  VIMDLL: yes,  GUI: yes, arch: x64 }
+          - { features: HUGE,   toolchain: msvc,  VIMDLL: yes,  GUI: yes, arch: x86 }
+
+    steps:
+      - name: Initialize
+        id: init
+        shell: bash
+        run: |
+          # Show Windows version
+          cmd /c ver
+
+          git config --global core.autocrlf input
+
+          if [ "${{ matrix.arch }}" = "x64" ]; then
+            cygreg=registry
+            pyreg=
+            echo "VCARCH=amd64" >> $GITHUB_ENV
+            echo "WARCH=x64" >> $GITHUB_ENV
+            echo "BITS=64" >> $GITHUB_ENV
+            echo "MSYSTEM=MINGW64" >> $GITHUB_ENV
+          else
+            cygreg=registry32
+            pyreg=-32
+            echo "VCARCH=x86" >> $GITHUB_ENV
+            echo "WARCH=ia32" >> $GITHUB_ENV
+            echo "BITS=32" >> $GITHUB_ENV
+            echo "MSYSTEM=MINGW32" >> $GITHUB_ENV
+          fi
+
+          echo "VCVARSALL=$(vswhere -products \* -latest -property installationPath)\\VC\\Auxiliary\\Build\\vcvarsall.bat" >> $GITHUB_ENV
+          if [ "${{ matrix.features }}" != "TINY" ]; then
+            if [ "${{ matrix.arch }}" = "x86" ]; then
+              choco install python2 --no-progress --forcex86
+            else
+              choco install python2 --no-progress
+            fi
+          fi
+          python3_dir=$(cat "/proc/$cygreg/HKEY_LOCAL_MACHINE/SOFTWARE/Python/PythonCore/${PYTHON3_VER_DOT}$pyreg/InstallPath/@")
+          echo "PYTHON3_DIR=$python3_dir" >> $GITHUB_ENV
+
+      - name: Checkout repository from github
+        uses: actions/checkout@v3
+
+      - name: Create a list of download URLs
+        shell: cmd
+        run: |
+          type NUL > urls.txt
+          echo %LUA_RELEASE%>> urls.txt
+          echo %WINPTY_URL%>> urls.txt
+
+      - name: Cache downloaded files
+        uses: actions/cache@v3
+        with:
+          path: downloads
+          key: ${{ runner.os }}-${{ matrix.arch }}-${{ hashFiles('urls.txt') }}
+
+      - name: Download dependencies
+        shell: cmd
+        run: |
+          path C:\Program Files\7-Zip;%path%
+          if not exist downloads mkdir downloads
+
+          echo %COL_GREEN%Download Lua%COL_RESET%
+          call :downloadfile %LUA${{ env.BITS }}_URL% downloads\lua.zip
+          7z x downloads\lua.zip -o%LUA_DIR% > nul || exit 1
+
+          echo %COL_GREEN%Download winpty%COL_RESET%
+          call :downloadfile %WINPTY_URL% downloads\winpty.zip
+          7z x -y downloads\winpty.zip -oD:\winpty > nul || exit 1
+          copy /Y D:\winpty\%WARCH%\bin\winpty.dll        src\winpty%BITS%.dll
+          copy /Y D:\winpty\%WARCH%\bin\winpty-agent.exe  src\
+
+          goto :eof
+
+          :downloadfile
+          :: call :downloadfile <URL> <localfile>
+          if not exist %2 (
+            curl -f -L %1 -o %2
+          )
+          if ERRORLEVEL 1 (
+            rem Retry once.
+            curl -f -L %1 -o %2 || exit 1
+          )
+          goto :eof
+
+      - name: Build (MSVC)
+        if: matrix.toolchain == 'msvc'
+        shell: cmd
+        run: |
+          call "%VCVARSALL%" %VCARCH%
+          cd src
+          if "${{ matrix.VIMDLL }}"=="yes" (
+            set GUI=yes
+          ) else (
+            set GUI=${{ matrix.GUI }}
+          )
+          if "${{ matrix.features }}"=="HUGE" (
+            nmake -nologo -f Make_mvc.mak ^
+              FEATURES=${{ matrix.features }} ^
+              GUI=%GUI% IME=yes ICONV=yes VIMDLL=${{ matrix.VIMDLL }} ^
+              DYNAMIC_LUA=yes LUA=%LUA_DIR% ^
+              DYNAMIC_PYTHON=yes PYTHON=%PYTHON_DIR% ^
+              DYNAMIC_PYTHON3=yes PYTHON3=%PYTHON3_DIR%
+          ) else (
+            nmake -nologo -f Make_mvc.mak ^
+              FEATURES=${{ matrix.features }} ^
+              GUI=%GUI% IME=yes ICONV=yes VIMDLL=${{ matrix.VIMDLL }}
+          )
+
+      - name: Check version
+        shell: cmd
+        run: |
+          PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%
+          if "${{ matrix.GUI }}"=="yes" (
+            start /wait src\gvim -u NONE -i NONE -c "redir > version.txt | ver | q" || exit 1
+            type version.txt
+            echo.
+            start /wait src\gvim -u NONE -i NONE -c "redir! > version.txt | so ci\if_ver-1.vim | q"
+            start /wait src\gvim -u NONE -i NONE -c "redir >> version.txt | so ci\if_ver-2.vim | q"
+            type version.txt
+            del version.txt
+          ) else (
+            src\vim --version || exit 1
+            src\vim -u NONE -i NONE --not-a-term -esNX -V1 -S ci/if_ver-1.vim -c quit
+            src\vim -u NONE -i NONE --not-a-term -esNX -V1 -S ci/if_ver-2.vim -c quit
+          )
+
+      #- name: Prepare Artifact
+      #  shell: cmd
+      #  run: |
+      #    mkdir artifacts
+      #    copy src\*vim.exe artifacts
+      #    copy src\vim*.dll artifacts
+      #
+      #- name: Upload Artifact
+      #  uses: actions/upload-artifact@v1
+      #  with:
+      #    name: vim${{ matrix.bits }}-${{ matrix.toolchain }}
+      #    path: ./artifacts
+
+      - name: Test and show the result of testing gVim
+        if: matrix.GUI == 'yes' || matrix.VIMDLL == 'yes'
+        shell: cmd
+        timeout-minutes: 15
+        run: |
+          PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%
+          call "%VCVARSALL%" %VCARCH%
+
+          echo %COL_GREEN%Test gVim:%COL_RESET%
+          cd src\testdir
+          if "${{ matrix.GUI }}"=="yes" (
+            nmake -nologo -f Make_mvc.mak VIMPROG=..\gvim || exit 1
+          ) else (
+            @rem Run only tiny tests.
+            nmake -nologo -f Make_mvc.mak tiny VIMPROG=..\gvim  || exit 1
+          )
+
+      - name: Test and show the result of testing Vim
+        if: matrix.GUI == 'no' || matrix.VIMDLL == 'yes'
+        shell: cmd
+        timeout-minutes: 15
+        run: |
+          PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%
+          call "%VCVARSALL%" %VCARCH%
+
+          echo %COL_GREEN%Test Vim:%COL_RESET%
+          cd src\testdir
+          nmake -nologo -f Make_mvc.mak clean
+          if "${{ matrix.GUI }}"=="no" (
+            nmake -nologo -f Make_mvc.mak VIMPROG=..\vim || exit 1
+          ) else (
+            @rem Run only tiny tests.
+            nmake -nologo -f Make_mvc.mak tiny VIMPROG=..\vim  || exit 1
+          )
+
+      - name: Generate gcov files
+        if: matrix.coverage
+        shell: msys2 {0}
+        run: |
+          cd src
+          find . -type f -name '*.gcno' -exec gcov -pb {} + || true
+
+      - name: Codecov
+        if: matrix.coverage
+        uses: codecov/codecov-action@v3
+        with:
+          directory: src
+          flags: windows,${{ matrix.toolchain }}-${{ matrix.arch }}-${{ matrix.features }}
