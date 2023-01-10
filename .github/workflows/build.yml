@@ -164,18 +164,19 @@ jobs:
         shell: cmd
         run: |
           PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%
+          cd vim
           if "${{ matrix.GUI }}"=="yes" (
-            start /wait vim\src\gvim -u NONE -i NONE -c "redir > version.txt | ver | q" || exit 1
+            start /wait src\gvim -u NONE -i NONE -c "redir > version.txt | ver | q" || exit 1
             type version.txt
             echo.
-            start /wait vim\src\gvim -u NONE -i NONE -c "redir! > version.txt | so vim\ci\if_ver-1.vim | q"
-            start /wait vim\src\gvim -u NONE -i NONE -c "redir >> version.txt | so vim\ci\if_ver-2.vim | q"
+            start /wait src\gvim -u NONE -i NONE -c "redir! > version.txt | so ci\if_ver-1.vim | q"
+            start /wait src\gvim -u NONE -i NONE -c "redir >> version.txt | so ci\if_ver-2.vim | q"
             type version.txt
             del version.txt
           ) else (
-            vim\src\vim --version || exit 1
-            vim\src\vim -u NONE -i NONE --not-a-term -esNX -V1 -S vim/ci/if_ver-1.vim -c quit
-            vim\src\vim -u NONE -i NONE --not-a-term -esNX -V1 -S vim/ci/if_ver-2.vim -c quit
+            src\vim --version || exit 1
+            src\vim -u NONE -i NONE --not-a-term -esNX -V1 -S ci/if_ver-1.vim -c quit
+            src\vim -u NONE -i NONE --not-a-term -esNX -V1 -S ci/if_ver-2.vim -c quit
           )
 
       - name: Prepare Artifact
