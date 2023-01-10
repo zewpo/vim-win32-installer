@@ -141,7 +141,7 @@ jobs:
         shell: cmd
         run: |
           call "%VCVARSALL%" %VCARCH%
-          cd src
+          cd vim\src
           if "${{ matrix.VIMDLL }}"=="yes" (
             set GUI=yes
           ) else (
@@ -200,7 +200,7 @@ jobs:
           call "%VCVARSALL%" %VCARCH%
 
           echo %COL_GREEN%Test gVim:%COL_RESET%
-          cd src\testdir
+          cd vim\src\testdir
           if "${{ matrix.GUI }}"=="yes" (
             nmake -nologo -f Make_mvc.mak VIMPROG=..\gvim || exit 1
           ) else (
@@ -217,7 +217,7 @@ jobs:
           call "%VCVARSALL%" %VCARCH%
 
           echo %COL_GREEN%Test Vim:%COL_RESET%
-          cd src\testdir
+          cd vim\src\testdir
           nmake -nologo -f Make_mvc.mak clean
           if "${{ matrix.GUI }}"=="no" (
             nmake -nologo -f Make_mvc.mak VIMPROG=..\vim || exit 1
