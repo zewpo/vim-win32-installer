@@ -1,4 +1,4 @@
-name: GitHub CI
+name: GitHub Build
 
 on:
   push:
@@ -39,8 +39,7 @@ jobs:
       PYTHON3_VER: 311
       PYTHON3_VER_DOT: '3.11'
       # Other dependencies
-      # winpty
-      WINPTY_URL: https://github.com/rprichard/winpty/releases/download/0.4.3/winpty-0.4.3-msvc2015.zip
+      #
       # Escape sequences
       COL_RED: "\x1b[31m"
       COL_GREEN: "\x1b[32m"
@@ -96,12 +95,17 @@ jobs:
       - name: Checkout repository from github
         uses: actions/checkout@v3
 
+      - name: Get Vim source code
+        shell: cmd
+        run: |
+          git submodule update --init
+          git submodule update --remote
+
       - name: Create a list of download URLs
         shell: cmd
         run: |
           type NUL > urls.txt
           echo %LUA_RELEASE%>> urls.txt
-          echo %WINPTY_URL%>> urls.txt
 
       - name: Cache downloaded files
         uses: actions/cache@v3
@@ -118,12 +122,6 @@ jobs:
           echo %COL_GREEN%Download Lua%COL_RESET%
           call :downloadfile %LUA${{ env.BITS }}_URL% downloads\lua.zip
           7z x downloads\lua.zip -o%LUA_DIR% > nul || exit 1
-
-          echo %COL_GREEN%Download winpty%COL_RESET%
-          call :downloadfile %WINPTY_URL% downloads\winpty.zip
-          7z x -y downloads\winpty.zip -oD:\winpty > nul || exit 1
-          copy /Y D:\winpty\%WARCH%\bin\winpty.dll        src\winpty%BITS%.dll
-          copy /Y D:\winpty\%WARCH%\bin\winpty-agent.exe  src\
 
           goto :eof
 
@@ -227,17 +225,3 @@ jobs:
             @rem Run only tiny tests.
             nmake -nologo -f Make_mvc.mak tiny VIMPROG=..\vim  || exit 1
           )
-
-      - name: Generate gcov files
-        if: matrix.coverage
-        shell: msys2 {0}
-        run: |
-          cd src
-          find . -type f -name '*.gcno' -exec gcov -pb {} + || true
-
-      - name: Codecov
-        if: matrix.coverage
-        uses: codecov/codecov-action@v3
-        with:
-          directory: src
-          flags: windows,${{ matrix.toolchain }}-${{ matrix.arch }}-${{ matrix.features }}
