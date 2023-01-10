@@ -199,7 +199,7 @@ jobs:
             DYNAMIC_PYTHON=yes PYTHON=%PYTHON_DIR% ^
             DYNAMIC_PYTHON3=yes PYTHON3=%PYTHON3_DIR% ^
             DYNAMIC_RUBY=yes RUBY=%RUBY_DIR% RUBY_MSVCRT_NAME=msvcrt ^
-            DYNAMIC_MZSCHEME=yes "MZSCHEME=%RACKET_DIR%" ^
+            DYNAMIC_MZSCHEME=yes MZSCHEME=%RACKET_DIR% ^
             SODIUM=%SODIUM_DIR% ^
 
       - name: Check version
