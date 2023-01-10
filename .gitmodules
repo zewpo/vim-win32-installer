@@ -1,4 +1,4 @@
 [submodule "vim"]
 	path = vim
 	url = https://github.com/zewpo/vim.git
-	branch = Shift-Movement-Keys-Appveyor
+	branch = Experiment-GitHub-Actions
