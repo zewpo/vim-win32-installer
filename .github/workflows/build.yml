@@ -55,13 +55,13 @@ jobs:
       RACKET_DIR: D:\racket
       MZSCHEME_VER: 3m_da32rk
       # Ruby
-      RUBY_VER: 30
-      RUBY_API_VER_LONG: 3.0.0
-      RUBY_BRANCH: ruby_3_0
-      RUBY_RELEASE: 3.0.2-1
+      RUBY_VER: 32
+      RUBY_API_VER_LONG: 3.2.0
+      RUBY_BRANCH: ruby_3_2
+      RUBY_RELEASE: 3.2.0-1
       RUBY_SRC_URL: https://github.com/ruby/ruby/archive/%RUBY_BRANCH%.zip
       RUBY_URL: https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-%RUBY_RELEASE%/rubyinstaller-%RUBY_RELEASE%-%ARCH%.7z
-      RUBY_DIR: D:\Ruby30-x64
+      RUBY_DIR: D:\Ruby32-x64
       # libsodium
       LIBSODIUM_URL: https://github.com/jedisct1/libsodium/releases/download/1.0.18-RELEASE/libsodium-1.0.18-msvc.zip
       SODIUM_DIR: D:\libsodium
