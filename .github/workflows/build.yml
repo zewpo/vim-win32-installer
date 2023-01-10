@@ -153,8 +153,8 @@ jobs:
         shell: cmd
         run: |
           mkdir artifacts
-          copy vim\src\*vim.exe artifacts
-          copy vim\src\vim*.dll artifacts
+          copy vim\src\*.exe artifacts
+          copy vim\src\*.dll artifacts
       
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
