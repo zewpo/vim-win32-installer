@@ -60,7 +60,7 @@ jobs:
       RUBY_BRANCH: ruby_3_2
       RUBY_RELEASE: 3.2.0-1
       RUBY_SRC_URL: https://github.com/ruby/ruby/archive/%RUBY_BRANCH%.zip
-      RUBY_URL: https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-%RUBY_RELEASE%/rubyinstaller-%RUBY_RELEASE%-%ARCH%.7z
+      RUBY_URL: https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-%RUBY_RELEASE%/rubyinstaller-%RUBY_RELEASE%-%WARCH%.7z
       RUBY_DIR: D:\Ruby32-x64
       # libsodium
       LIBSODIUM_URL: https://github.com/jedisct1/libsodium/releases/download/1.0.18-RELEASE/libsodium-1.0.18-msvc.zip
@@ -150,9 +150,9 @@ jobs:
           echo %COL_GREEN%Download Ruby%COL_RESET%
           call :downloadfile %RUBY_URL% downloads\ruby.7z
           7z x downloads\ruby.7z -oD:\ > nul || exit 1
-          move D:\rubyinstaller-%RUBY_RELEASE%-%ARCH% %RUBY_DIR% > nul || exit 1
+          move D:\rubyinstaller-%RUBY_RELEASE%-%WARCH% %RUBY_DIR% > nul || exit 1
           call :downloadfile %RUBY_SRC_URL% downloads\ruby_src.zip
-          7z x downloads\ruby_src.zip -aoa -o.. > nul || exit 1
+          7z x downloads\ruby_src.zip -aoa -o..  > nul || exit 1
           move ..\ruby-%RUBY_BRANCH% ..\ruby > nul || exit 1
           pushd ..\ruby
           call win32\configure.bat
