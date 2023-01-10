@@ -152,7 +152,7 @@ jobs:
           7z x downloads\ruby.7z -oD:\ > nul || exit 1
           move D:\rubyinstaller-%RUBY_RELEASE%-%ARCH% %RUBY_DIR% > nul || exit 1
           call :downloadfile %RUBY_SRC_URL% downloads\ruby_src.zip
-          7z x downloads\ruby_src.zip */bin */enc/Makefile.in */win32 */common.mk -ir^^!version.h -xr^^!README.* -xr^^!*/win32/*.c -xr^^!*/win32/*.h -o.. > nul || exit 1
+          7z x downloads\ruby_src.zip -aoa -o.. > nul || exit 1
           move ..\ruby-%RUBY_BRANCH% ..\ruby > nul || exit 1
           pushd ..\ruby
           call win32\configure.bat
