@@ -48,10 +48,6 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - { GUI: no }
-          - { GUI: yes }
 
     steps:
       - name: Initialize
@@ -121,14 +117,13 @@ jobs:
           goto :eof
 
       - name: Build (MSVC)
-        # if: matrix.toolchain == 'msvc'
         shell: cmd
         run: |
           call "%VCVARSALL%" %VCARCH%
           cd vim\src
           nmake -nologo -f Make_mvc.mak ^
             FEATURES=HUGE ^
-            GUI=${{ matrix.GUI }} IME=yes ICONV=yes VIMDLL=yes ^
+            GUI=yes TERMINAL=yes IME=yes ICONV=yes VIMDLL=yes ^
             DYNAMIC_LUA=yes LUA=%LUA_DIR% ^
             DYNAMIC_PYTHON=yes PYTHON=%PYTHON_DIR% ^
             DYNAMIC_PYTHON3=yes PYTHON3=%PYTHON3_DIR%
@@ -138,19 +133,13 @@ jobs:
         run: |
           PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%
           cd vim
-          if "${{ matrix.GUI }}"=="yes" (
-            start /wait src\gvim -u NONE -i NONE -c "redir > version.txt | ver | q" || exit 1
-            type version.txt
-            echo.
-            start /wait src\gvim -u NONE -i NONE -c "redir! > version.txt | so ci\if_ver-1.vim | q"
-            start /wait src\gvim -u NONE -i NONE -c "redir >> version.txt | so ci\if_ver-2.vim | q"
-            type version.txt
-            del version.txt
-          ) else (
-            src\vim --version || exit 1
-            src\vim -u NONE -i NONE --not-a-term -esNX -V1 -S ci/if_ver-1.vim -c quit
-            src\vim -u NONE -i NONE --not-a-term -esNX -V1 -S ci/if_ver-2.vim -c quit
-          )
+          start /wait src\gvim -u NONE -i NONE -c "redir > version.txt | ver | q" || exit 1
+          type version.txt
+          echo.
+          start /wait src\gvim -u NONE -i NONE -c "redir! > version.txt | so ci\if_ver-1.vim | q"
+          start /wait src\gvim -u NONE -i NONE -c "redir >> version.txt | so ci\if_ver-2.vim | q"
+          type version.txt
+          del version.txt
 
       - name: Prepare Artifact
         shell: cmd
@@ -166,36 +155,23 @@ jobs:
           path: ./artifacts
 
       - name: Test and show the result of testing gVim
-        if: matrix.GUI == 'yes'
         shell: cmd
         timeout-minutes: 15
         run: |
           PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%
           call "%VCVARSALL%" %VCARCH%
-
           echo %COL_GREEN%Test gVim:%COL_RESET%
           cd vim\src\testdir
-          if "${{ matrix.GUI }}"=="yes" (
-            nmake -nologo -f Make_mvc.mak VIMPROG=..\gvim || exit 1
-          ) else (
-            @rem Run only tiny tests.
-            nmake -nologo -f Make_mvc.mak tiny VIMPROG=..\gvim  || exit 1
-          )
+          nmake -nologo -f Make_mvc.mak VIMPROG=..\gvim || exit 1
 
       - name: Test and show the result of testing Vim
-        if: matrix.GUI == 'no'
         shell: cmd
         timeout-minutes: 15
         run: |
           PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%
           call "%VCVARSALL%" %VCARCH%
-
           echo %COL_GREEN%Test Vim:%COL_RESET%
           cd vim\src\testdir
           nmake -nologo -f Make_mvc.mak clean
-          if "${{ matrix.GUI }}"=="no" (
-            nmake -nologo -f Make_mvc.mak VIMPROG=..\vim || exit 1
-          ) else (
-            @rem Run only tiny tests.
-            nmake -nologo -f Make_mvc.mak tiny VIMPROG=..\vim  || exit 1
-          )
+          nmake -nologo -f Make_mvc.mak VIMPROG=..\vim || exit 1
+
