@@ -41,7 +41,30 @@ jobs:
       # Other dependencies
       # winpty
       WINPTY_URL: https://github.com/rprichard/winpty/releases/download/0.4.3/winpty-0.4.3-msvc2015.zip
+      # GetText libintl.dll and iconv.dll
       GETTEXT_URL: https://github.com/mlocati/gettext-iconv-windows/releases/download/v0.21-v1.16/gettext0.21-iconv1.16-shared-64.zip
+      # Perl
+      PERL_VER: 532
+      PERL_RELEASE: 5.32.1.1
+      PERL_URL: https://strawberryperl.com/download/%PERL_RELEASE%/strawberry-perl-%PERL_RELEASE%-64bit-portable.zip
+      PERL_DIR: D:\Strawberry\perl
+      # Racket
+      RACKET_VER: 3m_da32rk
+      RACKET_RELEASE: 8.3
+      RACKET_URL: https://www.cs.utah.edu/plt/installers/%RACKET_RELEASE%/racket-minimal-%RACKET_RELEASE%-x86_64-win32-bc.tgz
+      RACKET_DIR: D:\racket
+      MZSCHEME_VER: 3m_da32rk
+      # Ruby
+      RUBY_VER: 30
+      RUBY_API_VER_LONG: 3.0.0
+      RUBY_BRANCH: ruby_3_0
+      RUBY_RELEASE: 3.0.2-1
+      RUBY_SRC_URL: https://github.com/ruby/ruby/archive/%RUBY_BRANCH%.zip
+      RUBY_URL: https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-%RUBY_RELEASE%/rubyinstaller-%RUBY_RELEASE%-%ARCH%.7z
+      RUBY_DIR: D:\Ruby30-x64
+      # libsodium
+      LIBSODIUM_URL: https://github.com/jedisct1/libsodium/releases/download/1.0.18-RELEASE/libsodium-1.0.18-msvc.zip
+      SODIUM_DIR: D:\libsodium
       # Escape sequences
       COL_RED: "\x1b[31m"
       COL_GREEN: "\x1b[32m"
@@ -89,6 +112,8 @@ jobs:
           echo %LUA_RELEASE%>> urls.txt
           echo %WINPTY_URL%>> urls.txt
           echo %GETTEXT_URL%>> urls.txt
+          echo %RUBY_URL%>> urls.txt
+          echo %PERL_URL>> urls.txt
 
       - name: Cache downloaded files
         uses: actions/cache@v3
@@ -99,23 +124,53 @@ jobs:
       - name: Download dependencies
         shell: cmd
         run: |
-          path C:\Program Files\7-Zip;%path%
+          path C:\Program Files\7-Zip;%PYTHON_DIR%;%PYTHON3_DIR%;%PERL_DIR%\bin;%path%;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib
           if not exist downloads mkdir downloads
 
           echo %COL_GREEN%Download Lua%COL_RESET%
           call :downloadfile %LUA64_URL% downloads\lua.zip
-          7z x downloads\lua.zip -o%LUA_DIR% > nul || exit 1
-          echo %COL_GREEN%Download winpty%COL_RESET%
+          7z x downloads\lua.zip -o%LUA_DIR% > nul || exit 1  
 
+          echo %COL_GREEN%Download Perl%COL_RESET%
+          call :downloadfile %PERL_URL% downloads\perl.zip
+          7z x downloads\perl.zip perl -o%PERL_DIR%\.. > nul || exit 1
+
+          echo %COL_GREEN%Download WinPTY%COL_RESET%
           call :downloadfile %WINPTY_URL% downloads\winpty.zip
           7z x -y downloads\winpty.zip -oD:\winpty > nul || exit 1
           copy /Y D:\winpty\%WARCH%\bin\winpty.dll        vim\src\winpty64.dll
           copy /Y D:\winpty\%WARCH%\bin\winpty-agent.exe  vim\src\
 
+          echo %COL_GREEN%Download libintl.dll and iconv.dll%COL_RESET%
           call :downloadfile %GETTEXT_URL% downloads\gettext64.zip
           7z e -y downloads\gettext64.zip -oD:\gettext64 > nul || exit 1
           copy /Y D:\gettext64\libiconv-2.dll   vim\src\
           copy /Y D:\gettext64\libintl-8.dll    vim\src\
+
+          echo %COL_GREEN%Download Ruby%COL_RESET%
+          call :downloadfile %RUBY_URL% downloads\ruby.7z
+          7z x downloads\ruby.7z -oD:\ > nul || exit 1
+          move D:\rubyinstaller-%RUBY_RELEASE%-%ARCH% %RUBY_DIR% > nul || exit 1
+          call :downloadfile %RUBY_SRC_URL% downloads\ruby_src.zip
+          7z x downloads\ruby_src.zip */bin */enc/Makefile.in */win32 */common.mk -ir^^!version.h -xr^^!README.* -xr^^!*/win32/*.c -xr^^!*/win32/*.h -o.. > nul || exit 1
+          move ..\ruby-%RUBY_BRANCH% ..\ruby > nul || exit 1
+          pushd ..\ruby
+          call win32\configure.bat
+          echo on
+          nmake .config.h.time || exit 1
+          xcopy /s .ext\include %RUBY_DIR%\include\ruby-%RUBY_API_VER_LONG%
+          popd
+
+          echo %COL_GREEN%Download Libsodium%COL_RESET% 
+          call :downloadfile %LIBSODIUM_URL% downloads\libsodium.zip
+          7z x downloads\libsodium.zip -oD:\ > nul || exit 1
+          copy /Y D:\libsodium\x64\Release\v140\dynamic\libsodium.dll   vim\src\libsodium.dll
+
+          echo %COL_GREEN%Download Racket%COL_RESET%
+          call :downloadfile %RACKET_URL% downloads\racket.tgz
+          7z x -tgzip -so downloads/racket.tgz | 7z x -aoa -si -ttar -oD:\
+          type NUL > %RACKET_DIR%\include\bc_suffix.h
+          raco pkg install --auto r5rs-lib
 
           goto :eof
 
@@ -139,8 +194,12 @@ jobs:
             FEATURES=HUGE ^
             GUI=yes TERMINAL=yes IME=yes ICONV=yes VIMDLL=yes ^
             DYNAMIC_LUA=yes LUA=%LUA_DIR% ^
+            DYNAMIC_PERL=yes PERL=%PERL_DIR% ^
             DYNAMIC_PYTHON=yes PYTHON=%PYTHON_DIR% ^
-            DYNAMIC_PYTHON3=yes PYTHON3=%PYTHON3_DIR%
+            DYNAMIC_PYTHON3=yes PYTHON3=%PYTHON3_DIR% ^
+            DYNAMIC_RUBY=yes RUBY=%RUBY_DIR% RUBY_MSVCRT_NAME=msvcrt ^
+            DYNAMIC_MZSCHEME=yes "MZSCHEME=%RACKET_DIR%" ^
+            SODIUM=%SODIUM_DIR% ^
 
       - name: Check version
         shell: cmd
