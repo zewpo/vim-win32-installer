@@ -239,7 +239,7 @@ jobs:
         shell: cmd
         timeout-minutes: 15
         run: |
-          PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%;%RACKET_DIR%\lib
+          PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%
           call "%VCVARSALL%" %VCARCH%
           echo %COL_GREEN%Test gVim:%COL_RESET%
           cd vim\src\testdir
@@ -249,7 +249,7 @@ jobs:
         shell: cmd
         timeout-minutes: 15
         run: |
-          PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%;%RACKET_DIR%\lib
+          PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%
           call "%VCVARSALL%" %VCARCH%
           echo %COL_GREEN%Test Vim:%COL_RESET%
           cd vim\src\testdir
