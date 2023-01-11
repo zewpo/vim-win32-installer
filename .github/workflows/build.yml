@@ -151,24 +151,15 @@ jobs:
           call :downloadfile %RUBY_URL% downloads\ruby.7z
           echo on
           7z x downloads\ruby.7z -oD:\ > nul || exit 1
-          dir D:\
           move D:\rubyinstaller-%RUBY_RELEASE%-%WARCH% %RUBY_DIR% > nul || exit 1
           call :downloadfile %RUBY_SRC_URL% downloads\ruby_src.zip
           7z x downloads\ruby_src.zip -aoa -o..  > nul || exit 1
-          dir ..\
           move ..\ruby-%RUBY_BRANCH% ..\ruby > nul || exit 1
-          dir ..\
           pushd ..\ruby
-          dir .\
-          dir win32
           call win32\configure.bat
           nmake .config.h.time || exit 1
           xcopy /s .ext\include %RUBY_DIR%\include\ruby-%RUBY_API_VER_LONG%
-          dir .\
           popd
-          dir %RUBY_DIR%\bin
-          dir %RUBY_DIR%\bin\ruby_builtin_dlls
-          dir %RUBY_DIR%\include\ruby-%RUBY_API_VER_LONG%
           echo off
 
           echo %COL_GREEN%Download Libsodium%COL_RESET% 
