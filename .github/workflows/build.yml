@@ -149,18 +149,27 @@ jobs:
 
           echo %COL_GREEN%Download Ruby%COL_RESET%
           call :downloadfile %RUBY_URL% downloads\ruby.7z
+          echo on
           7z x downloads\ruby.7z -oD:\ > nul || exit 1
+          dir D:\
           move D:\rubyinstaller-%RUBY_RELEASE%-%WARCH% %RUBY_DIR% > nul || exit 1
           call :downloadfile %RUBY_SRC_URL% downloads\ruby_src.zip
           7z x downloads\ruby_src.zip -aoa -o..  > nul || exit 1
+          dir ..\
           move ..\ruby-%RUBY_BRANCH% ..\ruby > nul || exit 1
+          dir ..\
           pushd ..\ruby
+          dir .\
+          dir win32
           call win32\configure.bat
-          echo on
           nmake .config.h.time || exit 1
           xcopy /s .ext\include %RUBY_DIR%\include\ruby-%RUBY_API_VER_LONG%
-          echo off
+          dir .\
           popd
+          dir %RUBY_DIR%\bin
+          dir %RUBY_DIR%\bin\ruby_builtin_dlls
+          dir %RUBY_DIR%\include\ruby-%RUBY_API_VER_LONG%
+          echo off
 
           echo %COL_GREEN%Download Libsodium%COL_RESET% 
           call :downloadfile %LIBSODIUM_URL% downloads\libsodium.zip
@@ -172,6 +181,9 @@ jobs:
           7z x -tgzip -so downloads/racket.tgz | 7z x -aoa -si -ttar -oD:\
           type NUL > %RACKET_DIR%\include\bc_suffix.h
           raco pkg install --auto r5rs-lib
+          dir %RACKET_DIR%
+          dir %RACKET_DIR%\lib
+
 
           goto :eof
 
