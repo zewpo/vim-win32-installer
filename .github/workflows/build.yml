@@ -53,7 +53,7 @@ jobs:
       RACKET_RELEASE: 8.3
       RACKET_URL: https://www.cs.utah.edu/plt/installers/%RACKET_RELEASE%/racket-minimal-%RACKET_RELEASE%-x86_64-win32-bc.tgz
       RACKET_DIR: D:\racket
-      MZSCHEME_VER: 3m_da32rk
+      MZSCHEME_VER: %RACKET_VER%
       # Ruby
       RUBY_VER: 32
       RUBY_API_VER_LONG: 3.2.0
@@ -200,8 +200,8 @@ jobs:
             DYNAMIC_PYTHON=yes PYTHON=%PYTHON_DIR% ^
             DYNAMIC_PYTHON3=yes PYTHON3=%PYTHON3_DIR% ^
             DYNAMIC_RUBY=yes RUBY=%RUBY_DIR% RUBY_MSVCRT_NAME=msvcrt ^
-            DYNAMIC_MZSCHEME=yes MZSCHEME=%RACKET_DIR% ^
-            SODIUM=%SODIUM_DIR% ^
+            DYNAMIC_MZSCHEME=yes MZSCHEME_VER=%MZSCHEME_VER% MZSCHEME=%RACKET_DIR% ^
+            SODIUM=%SODIUM_DIR%
 
       - name: Check version
         shell: cmd
