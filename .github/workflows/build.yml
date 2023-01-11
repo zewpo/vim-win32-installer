@@ -285,9 +285,9 @@ jobs:
           pushd ..\nsis
           7z x icons.zip > nul
           "%ProgramFiles(x86)%\NSIS\makensis" /DVIMRT=..\runtime /DGETTEXT=D:\ /DWIN64=1 /DPATCHLEVEL=%PATCHLEVEL% gvim.nsi "/XOutFile ..\..\gvim_%TAG_NAME:~1%_x64.exe"
-          
           popd
-
+          7z a unsigned-gvim_%TAG_NAME:~1%_x64.zip gvim_%TAG_NAME:~1%_x64.zip gvim*.exe
+          dir
 
 
       - name: Check version
@@ -316,6 +316,8 @@ jobs:
           mkdir artifacts
           copy vim\src\*.exe artifacts
           copy vim\src\*.dll artifacts
+          copy *.zip artifacts
+          copy *.exe artifacts
       
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
