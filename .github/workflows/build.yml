@@ -147,9 +147,9 @@ jobs:
           copy /Y D:\gettext64\libiconv-2.dll   vim\src\
           copy /Y D:\gettext64\libintl-8.dll    vim\src\
 
-          echo on
-          C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -Syu gettext"
-          echo off
+          @REM echo on
+          @REM C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -Syu --noconfirm gettext"
+          @REM echo off
           
           echo %COL_GREEN%Download Ruby%COL_RESET%
           call :downloadfile %RUBY_URL% downloads\ruby.7z
@@ -210,13 +210,13 @@ jobs:
             SODIUM=%SODIUM_DIR%
 
             pushd po
-            nmake -f Make_mvc.mak GETTEXT_PATH=%CYGWIN_DIR%\bin VIMRUNTIME=..\..\runtime install-all || exit 1
+            nmake -f Make_mvc.mak GETTEXT_PATH=C:\msys64\mingw64\bin VIMRUNTIME=..\..\runtime install-all || exit 1
             popd
 
       - name: Check version
         shell: cmd
         run: |
-          PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%
+          PATH %LUA_DIR%;C:\msys64\mingw64\bin;%PATH%;%PYTHON3_DIR%
           cd vim
 
           echo %COL_GREEN%gVim Version%COL_RESET%
@@ -250,7 +250,7 @@ jobs:
         shell: cmd
         timeout-minutes: 15
         run: |
-          PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
+          PATH %LUA_DIR%;C:\msys64\mingw64\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
           call "%VCVARSALL%" %VCARCH%
           echo %COL_GREEN%Test Vim:%COL_RESET%
           cd vim\src\testdir
@@ -261,7 +261,7 @@ jobs:
         shell: cmd
         timeout-minutes: 15
         run: |
-          PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
+          PATH %LUA_DIR%;C:\msys64\mingw64\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
           call "%VCVARSALL%" %VCARCH%
           echo %COL_GREEN%Test gVim:%COL_RESET%
           cd vim\src\testdir
