@@ -199,7 +199,7 @@ jobs:
             DYNAMIC_PYTHON=yes PYTHON=%PYTHON_DIR% ^
             DYNAMIC_PYTHON3=yes PYTHON3=%PYTHON3_DIR% ^
             DYNAMIC_RUBY=yes RUBY=%RUBY_DIR% RUBY_MSVCRT_NAME=msvcrt ^
-            DYNAMIC_MZSCHEME=yes MZSCHEME_VER=%RACKET_VER% MZSCHEME=%RACKET_DIR% ^
+            DYNAMIC_MZSCHEME=yes MZSCHEME=%RACKET_DIR% ^
             SODIUM=%SODIUM_DIR%
 
       - name: Check version
@@ -239,7 +239,7 @@ jobs:
         shell: cmd
         timeout-minutes: 15
         run: |
-          PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%
+          PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
           call "%VCVARSALL%" %VCARCH%
           echo %COL_GREEN%Test gVim:%COL_RESET%
           cd vim\src\testdir
@@ -249,7 +249,7 @@ jobs:
         shell: cmd
         timeout-minutes: 15
         run: |
-          PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%
+          PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
           call "%VCVARSALL%" %VCARCH%
           echo %COL_GREEN%Test Vim:%COL_RESET%
           cd vim\src\testdir
