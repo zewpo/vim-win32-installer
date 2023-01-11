@@ -148,9 +148,9 @@ jobs:
           copy /Y D:\gettext64\libintl-8.dll    vim\src\
 
           echo on
-          msys2bash.cmd -mingw64 -c "pacman -Syu gettext"
+          C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -Syu gettext"
           echo off
-
+          
           echo %COL_GREEN%Download Ruby%COL_RESET%
           call :downloadfile %RUBY_URL% downloads\ruby.7z
           echo on
