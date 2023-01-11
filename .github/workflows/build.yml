@@ -247,7 +247,7 @@ jobs:
           name: vim64-msvc
           path: ./artifacts
 
-      - name: Test and show the result of testing Vim
+      - name: Test Vim and show the results
         shell: cmd
         timeout-minutes: 15
         run: |
@@ -258,7 +258,7 @@ jobs:
           nmake -nologo -f Make_mvc.mak clean
           nmake -nologo -f Make_mvc.mak VIMPROG=..\vim || exit 1
 
-      - name: Test and show the result of testing gVim
+      - name: Test gVim and show the results
         shell: cmd
         timeout-minutes: 15
         run: |
