@@ -60,7 +60,7 @@ jobs:
       RUBY_RELEASE: 3.2.0-1
       RUBY_SRC_URL: https://github.com/ruby/ruby/archive/%RUBY_BRANCH%.zip
       RUBY_URL: https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-%RUBY_RELEASE%/rubyinstaller-%RUBY_RELEASE%-%WARCH%.7z
-      RUBY_DIR: D:\Ruby${{ RUBY_VER }}-x64
+      RUBY_DIR: D:\Ruby$RUBY_VER-x64
       # libsodium
       LIBSODIUM_URL: https://github.com/jedisct1/libsodium/releases/download/1.0.18-RELEASE/libsodium-1.0.18-msvc.zip
       SODIUM_DIR: D:\libsodium
