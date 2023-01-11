@@ -147,6 +147,10 @@ jobs:
           copy /Y D:\gettext64\libiconv-2.dll   vim\src\
           copy /Y D:\gettext64\libintl-8.dll    vim\src\
 
+          echo on
+          msys2bash.cmd -mingw64 -c "pacman -Syu gettext"
+          echo off
+
           echo %COL_GREEN%Download Ruby%COL_RESET%
           call :downloadfile %RUBY_URL% downloads\ruby.7z
           echo on
@@ -204,6 +208,10 @@ jobs:
             DYNAMIC_RUBY=yes RUBY=%RUBY_DIR% RUBY_MSVCRT_NAME=msvcrt ^
             DYNAMIC_MZSCHEME=yes MZSCHEME=%RACKET_DIR% ^
             SODIUM=%SODIUM_DIR%
+
+            pushd po
+            nmake -f Make_mvc.mak GETTEXT_PATH=%CYGWIN_DIR%\bin VIMRUNTIME=..\..\runtime install-all || exit 1
+            popd
 
       - name: Check version
         shell: cmd
