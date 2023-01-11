@@ -239,8 +239,8 @@ jobs:
         shell: cmd
         timeout-minutes: 15
         run: |
+          PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%;%RACKET_DIR%\lib
           call "%VCVARSALL%" %VCARCH%
-          path %PYTHON_DIR%;%PYTHON3_DIR%;%PERL_DIR%\bin;C:\msys64\%MSYSTEM%\bin;%path%;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib
           echo %COL_GREEN%Test gVim:%COL_RESET%
           cd vim\src\testdir
           nmake -nologo -f Make_mvc.mak VIMPROG=..\gvim || exit 1
@@ -249,8 +249,8 @@ jobs:
         shell: cmd
         timeout-minutes: 15
         run: |
+          PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%;%RACKET_DIR%\lib
           call "%VCVARSALL%" %VCARCH%
-          path %PYTHON_DIR%;%PYTHON3_DIR%;%PERL_DIR%\bin;C:\msys64\%MSYSTEM%\bin;%path%;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib
           echo %COL_GREEN%Test Vim:%COL_RESET%
           cd vim\src\testdir
           nmake -nologo -f Make_mvc.mak clean
