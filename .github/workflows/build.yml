@@ -247,16 +247,6 @@ jobs:
           name: vim64-msvc
           path: ./artifacts
 
-      - name: Test and show the result of testing gVim
-        shell: cmd
-        timeout-minutes: 15
-        run: |
-          PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
-          call "%VCVARSALL%" %VCARCH%
-          echo %COL_GREEN%Test gVim:%COL_RESET%
-          cd vim\src\testdir
-          nmake -nologo -f Make_mvc.mak VIMPROG=..\gvim || exit 1
-
       - name: Test and show the result of testing Vim
         shell: cmd
         timeout-minutes: 15
@@ -268,3 +258,13 @@ jobs:
           nmake -nologo -f Make_mvc.mak clean
           nmake -nologo -f Make_mvc.mak VIMPROG=..\vim || exit 1
 
+      - name: Test and show the result of testing gVim
+        shell: cmd
+        timeout-minutes: 15
+        run: |
+          PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
+          call "%VCVARSALL%" %VCARCH%
+          echo %COL_GREEN%Test gVim:%COL_RESET%
+          cd vim\src\testdir
+          nmake -nologo -f Make_mvc.mak clean
+          nmake -nologo -f Make_mvc.mak VIMPROG=..\gvim || exit 1
