@@ -239,7 +239,7 @@ jobs:
         shell: cmd
         timeout-minutes: 15
         run: |
-          path %PYTHON3_DIR%;%PERL_DIR%\bin;%path%;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;C:\msys64\%MSYSTEM%\bin
+          path %PYTHON_DIR%;%PYTHON3_DIR%;%PERL_DIR%\bin;C:\msys64\%MSYSTEM%\bin;%path%;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib
           call "%VCVARSALL%" %VCARCH%
           echo %COL_GREEN%Test gVim:%COL_RESET%
           cd vim\src\testdir
@@ -249,7 +249,7 @@ jobs:
         shell: cmd
         timeout-minutes: 15
         run: |
-          path %PYTHON3_DIR%;%PERL_DIR%\bin;%path%;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;C:\msys64\%MSYSTEM%\bin
+          path %PYTHON_DIR%;%PYTHON3_DIR%;%PERL_DIR%\bin;C:\msys64\%MSYSTEM%\bin;%path%;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib
           call "%VCVARSALL%" %VCARCH%
           echo %COL_GREEN%Test Vim:%COL_RESET%
           cd vim\src\testdir
