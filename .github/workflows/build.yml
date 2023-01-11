@@ -208,6 +208,8 @@ jobs:
         run: |
           PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%
           cd vim
+
+          echo %COL_GREEN%GVIm Version%COL_RESET%
           start /wait src\gvim -u NONE -i NONE -c "redir > version.txt | ver | q" || exit 1
           type version.txt
           echo.
@@ -215,6 +217,11 @@ jobs:
           start /wait src\gvim -u NONE -i NONE -c "redir >> version.txt | so ci\if_ver-2.vim | q"
           type version.txt
           del version.txt
+
+          echo %COL_GREEN%VIm Version%COL_RESET%
+          src\vim --version || exit 1
+          src\vim -u NONE -i NONE --not-a-term -esNX -V1 -S ci/if_ver-1.vim -c quit
+          src\vim -u NONE -i NONE --not-a-term -esNX -V1 -S ci/if_ver-2.vim -c quit
 
       - name: Prepare Artifact
         shell: cmd
