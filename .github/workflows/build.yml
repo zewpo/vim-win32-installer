@@ -209,9 +209,9 @@ jobs:
             DYNAMIC_MZSCHEME=yes MZSCHEME=%RACKET_DIR% ^
             SODIUM=%SODIUM_DIR%
 
-            pushd po
-            nmake -f Make_mvc.mak GETTEXT_PATH=C:\msys64\mingw64\bin VIMRUNTIME=..\..\runtime install-all || exit 1
-            popd
+          pushd po
+          nmake -f Make_mvc.mak GETTEXT_PATH=C:\msys64\mingw64\bin VIMRUNTIME=..\..\runtime install-all || exit 1
+          popd
 
       - name: Check version
         shell: cmd
