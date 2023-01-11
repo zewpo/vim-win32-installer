@@ -60,7 +60,7 @@ jobs:
       RUBY_RELEASE: 3.2.0-1
       RUBY_SRC_URL: https://github.com/ruby/ruby/archive/%RUBY_BRANCH%.zip
       RUBY_URL: https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-%RUBY_RELEASE%/rubyinstaller-%RUBY_RELEASE%-%WARCH%.7z
-      RUBY_DIR: D:\Ruby32-x64
+      RUBY_DIR: D:\Ruby${{ env.RUBY_VER }}-x64
       # libsodium
       LIBSODIUM_URL: https://github.com/jedisct1/libsodium/releases/download/1.0.18-RELEASE/libsodium-1.0.18-msvc.zip
       SODIUM_DIR: D:\libsodium
@@ -123,7 +123,6 @@ jobs:
       - name: Download and extract dependencies
         shell: cmd
         run: |
-          setlocal ENABLEDELAYEDEXPANSION
           path C:\Program Files\7-Zip;%PYTHON_DIR%;%PYTHON3_DIR%;%PERL_DIR%\bin;%path%;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib
           call "%VCVARSALL%" %VCARCH%
           if not exist downloads mkdir downloads
@@ -190,7 +189,6 @@ jobs:
       - name: Build (MSVC)
         shell: cmd
         run: |
-          setlocal ENABLEDELAYEDEXPANSION
           call "%VCVARSALL%" %VCARCH%
           cd vim\src
           nmake -nologo -f Make_mvc.mak ^
@@ -207,7 +205,6 @@ jobs:
       - name: Check version
         shell: cmd
         run: |
-          setlocal ENABLEDELAYEDEXPANSION
           PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%
           cd vim
 
@@ -242,7 +239,6 @@ jobs:
         shell: cmd
         timeout-minutes: 15
         run: |
-          setlocal ENABLEDELAYEDEXPANSION
           PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%
           call "%VCVARSALL%" %VCARCH%
           echo %COL_GREEN%Test gVim:%COL_RESET%
@@ -253,7 +249,6 @@ jobs:
         shell: cmd
         timeout-minutes: 15
         run: |
-          setlocal ENABLEDELAYEDEXPANSION
           PATH %LUA_DIR%;C:\msys64\%MSYSTEM%\bin;%PATH%;%PYTHON3_DIR%
           call "%VCVARSALL%" %VCARCH%
           echo %COL_GREEN%Test Vim:%COL_RESET%
