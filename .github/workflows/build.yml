@@ -249,7 +249,10 @@ jobs:
           echo %COL_GREEN%Build ONLY 64-bit version of gvimext.dll for the installer%COL_RESET%
           mkdir GvimExt64
           
-          start /wait cmd /c "%VCVARSALL% x64 && cd GvimExt && nmake -f Make_mvc.mak CPU=AMD64 clean all > ..\gvimext.log"
+          %VCVARSALL% x64
+          pushd GvimExt
+          nmake -f Make_mvc.mak CPU=AMD64 clean all > ..\gvimext.log
+          popd
           type gvimext.log
           copy GvimExt\gvimext.dll   GvimExt\gvimext64.dll
           move GvimExt\gvimext.dll   GvimExt64\gvimext.dll
