@@ -156,57 +156,57 @@ jobs:
           copy /Y D:\gettext64\libiconv-2.dll   vim\src\
           copy /Y D:\gettext64\libintl-8.dll    vim\src\
 
-         @REM echo on
-         @REM C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -Syu --noconfirm gettext"
-         @REM echo off
-         
-         echo %COL_GREEN%Download Ruby%COL_RESET%
-         call :downloadfile %RUBY_URL% downloads\ruby.7z
-         echo on
-         7z x downloads\ruby.7z -oD:\ > nul || exit 1
-         move D:\rubyinstaller-%RUBY_RELEASE%-%WARCH% %RUBY_DIR% > nul || exit 1
-         call :downloadfile %RUBY_SRC_URL% downloads\ruby_src.zip
-         7z x downloads\ruby_src.zip -aoa -o..  > nul || exit 1
-         move ..\ruby-%RUBY_BRANCH% ..\ruby > nul || exit 1
-         pushd ..\ruby
-         call win32\configure.bat
-         nmake .config.h.time || exit 1
-         xcopy /s .ext\include %RUBY_DIR%\include\ruby-%RUBY_API_VER_LONG%
-         popd
-         echo off
+          @REM echo on
+          @REM C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -Syu --noconfirm gettext"
+          @REM echo off
 
-         echo %COL_GREEN%Download Libsodium%COL_RESET% 
-         call :downloadfile %LIBSODIUM_URL% downloads\libsodium.zip
-         7z x downloads\libsodium.zip -oD:\ > nul || exit 1
-         copy /Y D:\libsodium\x64\Release\v140\dynamic\libsodium.dll   vim\src\libsodium.dll
+          echo %COL_GREEN%Download Ruby%COL_RESET%
+          call :downloadfile %RUBY_URL% downloads\ruby.7z
+          echo on
+          7z x downloads\ruby.7z -oD:\ > nul || exit 1
+          move D:\rubyinstaller-%RUBY_RELEASE%-%WARCH% %RUBY_DIR% > nul || exit 1
+          call :downloadfile %RUBY_SRC_URL% downloads\ruby_src.zip
+          7z x downloads\ruby_src.zip -aoa -o..  > nul || exit 1
+          move ..\ruby-%RUBY_BRANCH% ..\ruby > nul || exit 1
+          pushd ..\ruby
+          call win32\configure.bat
+          nmake .config.h.time || exit 1
+          xcopy /s .ext\include %RUBY_DIR%\include\ruby-%RUBY_API_VER_LONG%
+          popd
+          echo off
 
-         echo %COL_GREEN%Download Racket%COL_RESET%
-         call :downloadfile %RACKET_URL% downloads\racket.tgz
-         7z x -tgzip -so downloads/racket.tgz | 7z x -aoa -si -ttar -oD:\
-         type NUL > %RACKET_DIR%\include\bc_suffix.h
-         raco pkg install --auto r5rs-lib
+          echo %COL_GREEN%Download Libsodium%COL_RESET% 
+          call :downloadfile %LIBSODIUM_URL% downloads\libsodium.zip
+          7z x downloads\libsodium.zip -oD:\ > nul || exit 1
+          copy /Y D:\libsodium\x64\Release\v140\dynamic\libsodium.dll   vim\src\libsodium.dll
 
-         echo %COL_GREEN%Download Installer UPX%COL_RESET%
-         call :downloadfile %UPX_URL% downloads\upx.zip
-         7z e downloads\upx.zip *\upx.exe -ovim\nsis > nul || exit 1
+          echo %COL_GREEN%Download Racket%COL_RESET%
+          call :downloadfile %RACKET_URL% downloads\racket.tgz
+          7z x -tgzip -so downloads/racket.tgz | 7z x -aoa -si -ttar -oD:\
+          type NUL > %RACKET_DIR%\include\bc_suffix.h
+          raco pkg install --auto r5rs-lib
 
-         echo %COL_GREEN%Download Installer ShellExecAsUser%COL_RESET%
-         call :downloadfile %SHELLEXECASUSER_URL% downloads\shellexecasuser.zip
-         7z x downloads\shellexecasuser.zip -oD:\shellexecasuser > nul || exit 1
-         copy /Y D:\shellexecasuser\unicode\ShellExecAsUser.dll "%ProgramFiles(x86)%\NSIS\Plugins\x86-unicode"
+          echo %COL_GREEN%Download Installer UPX%COL_RESET%
+          call :downloadfile %UPX_URL% downloads\upx.zip
+          7z e downloads\upx.zip *\upx.exe -ovim\nsis > nul || exit 1
 
-          goto :eof
+          echo %COL_GREEN%Download Installer ShellExecAsUser%COL_RESET%
+          call :downloadfile %SHELLEXECASUSER_URL% downloads\shellexecasuser.zip
+          7z x downloads\shellexecasuser.zip -oD:\shellexecasuser > nul || exit 1
+          copy /Y D:\shellexecasuser\unicode\ShellExecAsUser.dll "%ProgramFiles(x86)%\NSIS\Plugins\x86-unicode"
 
-          :downloadfile
-          :: call :downloadfile <URL> <localfile>
-          if not exist %2 (
-            curl -f -L %1 -o %2
-          )
-          if ERRORLEVEL 1 (
-            rem Retry once.
-            curl -f -L %1 -o %2 || exit 1
-          )
-          goto :eof
+           goto :eof
+
+           :downloadfile
+           :: call :downloadfile <URL> <localfile>
+           if not exist %2 (
+             curl -f -L %1 -o %2
+           )
+           if ERRORLEVEL 1 (
+             rem Retry once.
+             curl -f -L %1 -o %2 || exit 1
+           )
+           goto :eof
 
       - name: Build (MSVC)
         shell: cmd
