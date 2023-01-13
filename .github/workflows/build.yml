@@ -156,44 +156,44 @@ jobs:
           copy /Y D:\gettext64\libiconv-2.dll   vim\src\
           copy /Y D:\gettext64\libintl-8.dll    vim\src\
 
-          @REM echo on
-          @REM C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -Syu --noconfirm gettext"
-          @REM echo off
-          
-          echo %COL_GREEN%Download Ruby%COL_RESET%
-          call :downloadfile %RUBY_URL% downloads\ruby.7z
-          echo on
-          7z x downloads\ruby.7z -oD:\ > nul || exit 1
-          move D:\rubyinstaller-%RUBY_RELEASE%-%WARCH% %RUBY_DIR% > nul || exit 1
-          call :downloadfile %RUBY_SRC_URL% downloads\ruby_src.zip
-          7z x downloads\ruby_src.zip -aoa -o..  > nul || exit 1
-          move ..\ruby-%RUBY_BRANCH% ..\ruby > nul || exit 1
-          pushd ..\ruby
-          call win32\configure.bat
-          nmake .config.h.time || exit 1
-          xcopy /s .ext\include %RUBY_DIR%\include\ruby-%RUBY_API_VER_LONG%
-          popd
-          echo off
-
-          echo %COL_GREEN%Download Libsodium%COL_RESET% 
-          call :downloadfile %LIBSODIUM_URL% downloads\libsodium.zip
-          7z x downloads\libsodium.zip -oD:\ > nul || exit 1
-          copy /Y D:\libsodium\x64\Release\v140\dynamic\libsodium.dll   vim\src\libsodium.dll
-
-          echo %COL_GREEN%Download Racket%COL_RESET%
-          call :downloadfile %RACKET_URL% downloads\racket.tgz
-          7z x -tgzip -so downloads/racket.tgz | 7z x -aoa -si -ttar -oD:\
-          type NUL > %RACKET_DIR%\include\bc_suffix.h
-          raco pkg install --auto r5rs-lib
-
-          echo %COL_GREEN%Download Installer UPX%COL_RESET%
-          call :downloadfile %UPX_URL% downloads\upx.zip
-          7z e downloads\upx.zip *\upx.exe -ovim\nsis > nul || exit 1
-
-          echo %COL_GREEN%Download Installer ShellExecAsUser%COL_RESET%
-          call :downloadfile %SHELLEXECASUSER_URL% downloads\shellexecasuser.zip
-          7z x downloads\shellexecasuser.zip -oD:\shellexecasuser > nul || exit 1
-          copy /Y D:\shellexecasuser\unicode\ShellExecAsUser.dll "%ProgramFiles(x86)%\NSIS\Plugins\x86-unicode"
+#          @REM echo on
+#          @REM C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -Syu --noconfirm gettext"
+#          @REM echo off
+#          
+#          echo %COL_GREEN%Download Ruby%COL_RESET%
+#          call :downloadfile %RUBY_URL% downloads\ruby.7z
+#          echo on
+#          7z x downloads\ruby.7z -oD:\ > nul || exit 1
+#          move D:\rubyinstaller-%RUBY_RELEASE%-%WARCH% %RUBY_DIR% > nul || exit 1
+#          call :downloadfile %RUBY_SRC_URL% downloads\ruby_src.zip
+#          7z x downloads\ruby_src.zip -aoa -o..  > nul || exit 1
+#          move ..\ruby-%RUBY_BRANCH% ..\ruby > nul || exit 1
+#          pushd ..\ruby
+#          call win32\configure.bat
+#          nmake .config.h.time || exit 1
+#          xcopy /s .ext\include %RUBY_DIR%\include\ruby-%RUBY_API_VER_LONG%
+#          popd
+#          echo off
+#
+#          echo %COL_GREEN%Download Libsodium%COL_RESET% 
+#          call :downloadfile %LIBSODIUM_URL% downloads\libsodium.zip
+#          7z x downloads\libsodium.zip -oD:\ > nul || exit 1
+#          copy /Y D:\libsodium\x64\Release\v140\dynamic\libsodium.dll   vim\src\libsodium.dll
+#
+#          echo %COL_GREEN%Download Racket%COL_RESET%
+#          call :downloadfile %RACKET_URL% downloads\racket.tgz
+#          7z x -tgzip -so downloads/racket.tgz | 7z x -aoa -si -ttar -oD:\
+#          type NUL > %RACKET_DIR%\include\bc_suffix.h
+#          raco pkg install --auto r5rs-lib
+#
+#          echo %COL_GREEN%Download Installer UPX%COL_RESET%
+#          call :downloadfile %UPX_URL% downloads\upx.zip
+#          7z e downloads\upx.zip *\upx.exe -ovim\nsis > nul || exit 1
+#
+#          echo %COL_GREEN%Download Installer ShellExecAsUser%COL_RESET%
+#          call :downloadfile %SHELLEXECASUSER_URL% downloads\shellexecasuser.zip
+#          7z x downloads\shellexecasuser.zip -oD:\shellexecasuser > nul || exit 1
+#          copy /Y D:\shellexecasuser\unicode\ShellExecAsUser.dll "%ProgramFiles(x86)%\NSIS\Plugins\x86-unicode"
 
           goto :eof
 
@@ -214,88 +214,89 @@ jobs:
           call "%VCVARSALL%" %VCARCH%
           cd vim\src
           nmake -nologo -f Make_mvc.mak ^
-            FEATURES=HUGE ^
+            FEATURES=HUGE DEBUG=no POSTSCRIPT=yes ^
             GUI=yes TERMINAL=yes IME=yes ICONV=yes VIMDLL=yes ^
-            DYNAMIC_LUA=yes LUA=%LUA_DIR% ^
-            DYNAMIC_PERL=yes PERL=%PERL_DIR% ^
             DYNAMIC_PYTHON=yes PYTHON=%PYTHON_DIR% ^
-            DYNAMIC_PYTHON3=yes PYTHON3=%PYTHON3_DIR% ^
-            DYNAMIC_RUBY=yes RUBY=%RUBY_DIR% RUBY_MSVCRT_NAME=msvcrt ^
-            DYNAMIC_MZSCHEME=yes MZSCHEME=%RACKET_DIR% ^
-            SODIUM=%SODIUM_DIR%
+            DYNAMIC_PYTHON3=yes PYTHON3=%PYTHON3_DIR%
 
-          pushd po
-          nmake -f Make_mvc.mak GETTEXT_PATH=C:\msys64\usr\bin VIMRUNTIME=..\..\runtime install-all || exit 1
-          popd
+#            DYNAMIC_LUA=yes LUA=%LUA_DIR% ^
+#            DYNAMIC_PERL=yes PERL=%PERL_DIR% ^
+#            DYNAMIC_RUBY=yes RUBY=%RUBY_DIR% RUBY_MSVCRT_NAME=msvcrt ^
+#            DYNAMIC_MZSCHEME=yes MZSCHEME=%RACKET_DIR% ^
+#            SODIUM=%SODIUM_DIR%
+#
+#           pushd po
+#           nmake -f Make_mvc.mak GETTEXT_PATH=C:\msys64\usr\bin VIMRUNTIME=..\..\runtime install-all || exit 1
+#           popd
 
-      - name: Build Installer Packages
-        shell: cmd
-        run: |
-          @echo on
-          setlocal ENABLEDELAYEDEXPANSION
+      # - name: Build Installer Packages
+      #   shell: cmd
+      #   run: |
+      #     @echo on
+      #     setlocal ENABLEDELAYEDEXPANSION
 
-          for /f "tokens=5" %%i in ('vim\src\vim.exe --version ^| find "IMproved"') do ( set TAG_NAME_A_B=%%i )
-          for /f "tokens=3" %%i in ('vim\src\vim.exe --version ^| find "patches"') do ( set TAG_NAME_C=%%i )
-          call set TAG_NAME=vzewpo%%TAG_NAME_A_B:~0,-1%%.%%TAG_NAME_C:~2,-1%%
+      #     for /f "tokens=5" %%i in ('vim\src\vim.exe --version ^| find "IMproved"') do ( set TAG_NAME_A_B=%%i )
+      #     for /f "tokens=3" %%i in ('vim\src\vim.exe --version ^| find "patches"') do ( set TAG_NAME_C=%%i )
+      #     call set TAG_NAME=vzewpo%%TAG_NAME_A_B:~0,-1%%.%%TAG_NAME_C:~2,-1%%
 
-          echo %TAG_NAME%
+      #     echo %TAG_NAME%
 
-          for /f "delims=. tokens=1-3" %%i in ("%TAG_NAME%") do set PATCHLEVEL=%%k
+      #     for /f "delims=. tokens=1-3" %%i in ("%TAG_NAME%") do set PATCHLEVEL=%%k
 
-          cd vim\src
+      #     cd vim\src
   
-          echo %COL_GREEN%Build ONLY 64-bit version of gvimext.dll for the installer%COL_RESET%
-          mkdir GvimExt64
+      #     echo %COL_GREEN%Build ONLY 64-bit version of gvimext.dll for the installer%COL_RESET%
+      #     mkdir GvimExt64
           
-          call "%VCVARSALL%" %VCARCH%
-          pushd GvimExt
-          nmake -f Make_mvc.mak CPU=AMD64 clean all > ..\gvimext.log
-          popd
-          type gvimext.log
-          copy GvimExt\gvimext.dll   GvimExt\gvimext64.dll
-          move GvimExt\gvimext.dll   GvimExt64\gvimext.dll
-          copy /Y GvimExt\README.txt GvimExt64\
-          copy /Y GvimExt\*.inf      GvimExt64\
-          copy /Y GvimExt\*.reg      GvimExt64\
+      #     call "%VCVARSALL%" %VCARCH%
+      #     pushd GvimExt
+      #     nmake -f Make_mvc.mak CPU=AMD64 clean all > ..\gvimext.log
+      #     popd
+      #     type gvimext.log
+      #     copy GvimExt\gvimext.dll   GvimExt\gvimext64.dll
+      #     move GvimExt\gvimext.dll   GvimExt64\gvimext.dll
+      #     copy /Y GvimExt\README.txt GvimExt64\
+      #     copy /Y GvimExt\*.inf      GvimExt64\
+      #     copy /Y GvimExt\*.reg      GvimExt64\
 
-          echo %COL_GREEN%Create zip packages%COL_RESET%
-          7z a ..\..\gvim_%TAG_NAME:~1%_x64_pdb.zip *.pdb
-          copy /Y ..\README.txt ..\runtime
-          copy /Y ..\vimtutor.bat ..\runtime
-          copy /Y *.exe ..\runtime\
-          copy /Y libsodium.dll ..\runtime\
-          copy /Y xxd\*.exe ..\runtime
-          copy /Y tee\*.exe ..\runtime
-          mkdir ..\runtime\GvimExt64
+      #     echo %COL_GREEN%Create zip packages%COL_RESET%
+      #     7z a ..\..\gvim_%TAG_NAME:~1%_x64_pdb.zip *.pdb
+      #     copy /Y ..\README.txt ..\runtime
+      #     copy /Y ..\vimtutor.bat ..\runtime
+      #     copy /Y *.exe ..\runtime\
+      #     copy /Y libsodium.dll ..\runtime\
+      #     copy /Y xxd\*.exe ..\runtime
+      #     copy /Y tee\*.exe ..\runtime
+      #     mkdir ..\runtime\GvimExt64
 
-          copy /Y GvimExt64\*.*                    ..\runtime\GvimExt64\
-          copy /Y D:\gettext64\libiconv-2.dll      ..\runtime\GvimExt64\
-          copy /Y D:\gettext64\libintl-8.dll       ..\runtime\GvimExt64\
+      #     copy /Y GvimExt64\*.*                    ..\runtime\GvimExt64\
+      #     copy /Y D:\gettext64\libiconv-2.dll      ..\runtime\GvimExt64\
+      #     copy /Y D:\gettext64\libintl-8.dll       ..\runtime\GvimExt64\
 
-          copy /Y ..\..\diff.exe ..\runtime\
-          copy /Y D:\gettext64\libiconv-2.dll   ..\runtime\
-          copy /Y D:\gettext64\libintl-8.dll    ..\runtime\
+      #     copy /Y ..\..\diff.exe ..\runtime\
+      #     copy /Y D:\gettext64\libiconv-2.dll   ..\runtime\
+      #     copy /Y D:\gettext64\libintl-8.dll    ..\runtime\
 
-          copy /Y winpty* ..\runtime\
-          copy /Y winpty* ..\..\
-          set dir=vim%TAG_NAME:~1,1%%TAG_NAME:~3,1%
-          mkdir ..\vim\%dir%
-          xcopy ..\runtime ..\vim\%dir% /Y /E /V /I /H /R /Q
-          7z a ..\..\gvim_%TAG_NAME:~1%_x64.zip ..\vim
+      #     copy /Y winpty* ..\runtime\
+      #     copy /Y winpty* ..\..\
+      #     set dir=vim%TAG_NAME:~1,1%%TAG_NAME:~3,1%
+      #     mkdir ..\vim\%dir%
+      #     xcopy ..\runtime ..\vim\%dir% /Y /E /V /I /H /R /Q
+      #     7z a ..\..\gvim_%TAG_NAME:~1%_x64.zip ..\vim
 
-          set CHERE_INVOKING=1
-          C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -lc "touch ../../src/auto/config.mk && make uganda.nsis.txt"
-          copy gvim.exe gvim_ole.exe
-          copy vim.exe vimw32.exe
-          copy tee\tee.exe teew32.exe
-          copy xxd\xxd.exe xxdw32.exe
-          copy install.exe installw32.exe
-          copy uninstall.exe uninstallw32.exe
-          pushd ..\nsis
-          7z x icons.zip > nul
-          "%ProgramFiles(x86)%\NSIS\makensis" /DVIMRT=..\runtime /DGETTEXT=D:\ /DWIN64=1 /DPATCHLEVEL=%PATCHLEVEL% gvim.nsi "/XOutFile ..\..\gvim_%TAG_NAME:~1%_x64.exe"
-          popd
-          7z a unsigned-gvim_%TAG_NAME:~1%_x64.zip gvim_%TAG_NAME:~1%_x64.zip gvim*.exe
+      #     set CHERE_INVOKING=1
+      #     C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -lc "touch ../../src/auto/config.mk && make uganda.nsis.txt"
+      #     copy gvim.exe gvim_ole.exe
+      #     copy vim.exe vimw32.exe
+      #     copy tee\tee.exe teew32.exe
+      #     copy xxd\xxd.exe xxdw32.exe
+      #     copy install.exe installw32.exe
+      #     copy uninstall.exe uninstallw32.exe
+      #     pushd ..\nsis
+      #     7z x icons.zip > nul
+      #     "%ProgramFiles(x86)%\NSIS\makensis" /DVIMRT=..\runtime /DGETTEXT=D:\ /DWIN64=1 /DPATCHLEVEL=%PATCHLEVEL% gvim.nsi "/XOutFile ..\..\gvim_%TAG_NAME:~1%_x64.exe"
+      #     popd
+      #     7z a unsigned-gvim_%TAG_NAME:~1%_x64.zip gvim_%TAG_NAME:~1%_x64.zip gvim*.exe
 
 
 
