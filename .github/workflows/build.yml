@@ -156,44 +156,44 @@ jobs:
           copy /Y D:\gettext64\libiconv-2.dll   vim\src\
           copy /Y D:\gettext64\libintl-8.dll    vim\src\
 
-          ::#          @REM echo on
-          ::#          @REM C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -Syu --noconfirm gettext"
-          ::#          @REM echo off
-          ::#          
-          ::#          echo %COL_GREEN%Download Ruby%COL_RESET%
-          ::#          call :downloadfile %RUBY_URL% downloads\ruby.7z
-          ::#          echo on
-          ::#          7z x downloads\ruby.7z -oD:\ > nul || exit 1
-          ::#          move D:\rubyinstaller-%RUBY_RELEASE%-%WARCH% %RUBY_DIR% > nul || exit 1
-          ::#          call :downloadfile %RUBY_SRC_URL% downloads\ruby_src.zip
-          ::#          7z x downloads\ruby_src.zip -aoa -o..  > nul || exit 1
-          ::#          move ..\ruby-%RUBY_BRANCH% ..\ruby > nul || exit 1
-          ::#          pushd ..\ruby
-          ::#          call win32\configure.bat
-          ::#          nmake .config.h.time || exit 1
-          ::#          xcopy /s .ext\include %RUBY_DIR%\include\ruby-%RUBY_API_VER_LONG%
-          ::#          popd
-          ::#          echo off
-          ::#
-          ::#          echo %COL_GREEN%Download Libsodium%COL_RESET% 
-          ::#          call :downloadfile %LIBSODIUM_URL% downloads\libsodium.zip
-          ::#          7z x downloads\libsodium.zip -oD:\ > nul || exit 1
-          ::#          copy /Y D:\libsodium\x64\Release\v140\dynamic\libsodium.dll   vim\src\libsodium.dll
-          ::#
-          ::#          echo %COL_GREEN%Download Racket%COL_RESET%
-          ::#          call :downloadfile %RACKET_URL% downloads\racket.tgz
-          ::#          7z x -tgzip -so downloads/racket.tgz | 7z x -aoa -si -ttar -oD:\
-          ::#          type NUL > %RACKET_DIR%\include\bc_suffix.h
-          ::#          raco pkg install --auto r5rs-lib
-          ::#
-          ::#          echo %COL_GREEN%Download Installer UPX%COL_RESET%
-          ::#          call :downloadfile %UPX_URL% downloads\upx.zip
-          ::#          7z e downloads\upx.zip *\upx.exe -ovim\nsis > nul || exit 1
-          ::#
-          ::#          echo %COL_GREEN%Download Installer ShellExecAsUser%COL_RESET%
-          ::#          call :downloadfile %SHELLEXECASUSER_URL% downloads\shellexecasuser.zip
-          ::#          7z x downloads\shellexecasuser.zip -oD:\shellexecasuser > nul || exit 1
-          ::#          copy /Y D:\shellexecasuser\unicode\ShellExecAsUser.dll "%ProgramFiles(x86)%\NSIS\Plugins\x86-unicode"
+         @REM echo on
+         @REM C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -Syu --noconfirm gettext"
+         @REM echo off
+         
+         echo %COL_GREEN%Download Ruby%COL_RESET%
+         call :downloadfile %RUBY_URL% downloads\ruby.7z
+         echo on
+         7z x downloads\ruby.7z -oD:\ > nul || exit 1
+         move D:\rubyinstaller-%RUBY_RELEASE%-%WARCH% %RUBY_DIR% > nul || exit 1
+         call :downloadfile %RUBY_SRC_URL% downloads\ruby_src.zip
+         7z x downloads\ruby_src.zip -aoa -o..  > nul || exit 1
+         move ..\ruby-%RUBY_BRANCH% ..\ruby > nul || exit 1
+         pushd ..\ruby
+         call win32\configure.bat
+         nmake .config.h.time || exit 1
+         xcopy /s .ext\include %RUBY_DIR%\include\ruby-%RUBY_API_VER_LONG%
+         popd
+         echo off
+
+         echo %COL_GREEN%Download Libsodium%COL_RESET% 
+         call :downloadfile %LIBSODIUM_URL% downloads\libsodium.zip
+         7z x downloads\libsodium.zip -oD:\ > nul || exit 1
+         copy /Y D:\libsodium\x64\Release\v140\dynamic\libsodium.dll   vim\src\libsodium.dll
+
+         echo %COL_GREEN%Download Racket%COL_RESET%
+         call :downloadfile %RACKET_URL% downloads\racket.tgz
+         7z x -tgzip -so downloads/racket.tgz | 7z x -aoa -si -ttar -oD:\
+         type NUL > %RACKET_DIR%\include\bc_suffix.h
+         raco pkg install --auto r5rs-lib
+
+         echo %COL_GREEN%Download Installer UPX%COL_RESET%
+         call :downloadfile %UPX_URL% downloads\upx.zip
+         7z e downloads\upx.zip *\upx.exe -ovim\nsis > nul || exit 1
+
+         echo %COL_GREEN%Download Installer ShellExecAsUser%COL_RESET%
+         call :downloadfile %SHELLEXECASUSER_URL% downloads\shellexecasuser.zip
+         7z x downloads\shellexecasuser.zip -oD:\shellexecasuser > nul || exit 1
+         copy /Y D:\shellexecasuser\unicode\ShellExecAsUser.dll "%ProgramFiles(x86)%\NSIS\Plugins\x86-unicode"
 
           goto :eof
 
@@ -214,7 +214,7 @@ jobs:
           call "%VCVARSALL%" %VCARCH%
           cd vim\src
           nmake -nologo -f Make_mvc.mak ^
-            FEATURES=HUGE DEBUG=no POSTSCRIPT=yes ^
+            FEATURES=HUGE POSTSCRIPT=yes DEBUG=no ^
             GUI=yes TERMINAL=yes IME=yes ICONV=yes VIMDLL=yes ^
             DYNAMIC_PYTHON=yes PYTHON=%PYTHON_DIR% ^
             DYNAMIC_PYTHON3=yes PYTHON3=%PYTHON3_DIR%
@@ -320,21 +320,21 @@ jobs:
           src\vim -u NONE -i NONE --not-a-term -esNX -V1 -S ci/if_ver-1.vim -c quit
           src\vim -u NONE -i NONE --not-a-term -esNX -V1 -S ci/if_ver-2.vim -c quit
 
-      - name: Prepare Artifact
-        shell: cmd
-        run: |
-          mkdir artifacts
-          copy vim\src\*.exe artifacts
-          copy vim\src\*.dll artifacts
-          copy *.zip artifacts
-          copy *.exe artifacts
-          copy *.dll artifacts
+      # - name: Prepare Artifact
+      #   shell: cmd
+      #   run: |
+      #     mkdir artifacts
+      #     copy vim\src\*.exe artifacts
+      #     copy vim\src\*.dll artifacts
+      #     copy *.zip artifacts
+      #     copy *.exe artifacts
+      #     copy *.dll artifacts
       
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: vim64-msvc
-          path: ./artifacts
+      # - name: Upload Artifact
+      #   uses: actions/upload-artifact@v1
+      #   with:
+      #     name: vim64-msvc
+      #     path: ./artifacts
 
       - name: Test Vim and show the results
         shell: cmd
