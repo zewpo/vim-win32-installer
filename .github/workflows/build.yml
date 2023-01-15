@@ -222,6 +222,7 @@ jobs:
       - name: Build (MSVC)
         shell: cmd
         run: |
+          path
           call "%VCVARSALL%" %VCARCH%
           cd vim\src
           nmake -nologo -f Make_mvc.mak ^
