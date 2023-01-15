@@ -259,6 +259,7 @@ jobs:
           @echo on
           path .;%PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;%PATH%
           path
+          where diff.exe
           echo %COL_GREEN%Test Vim:%COL_RESET%
           cd vim\src\testdir
           nmake -nologo -f Make_mvc.mak clean
@@ -275,6 +276,7 @@ jobs:
           @echo on
           path .;%PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;%PATH%
           path
+          where diff.exe
           echo %COL_GREEN%Test gVim:%COL_RESET%
           cd vim\src\testdir
           nmake -nologo -f Make_mvc.mak clean
