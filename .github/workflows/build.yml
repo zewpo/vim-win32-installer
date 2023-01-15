@@ -201,7 +201,7 @@ jobs:
 
           echo %COL_GREEN%Download Installer UPX%COL_RESET%
           call :downloadfile %UPX_URL% downloads\upx.zip
-          7z e downloads\upx.zip *\upx.exe -ovim\nsis > nul || exit 1
+          @REM 7z e downloads\upx.zip *\upx.exe -ovim\nsis > nul || exit 1
 
           echo %COL_GREEN%Download Installer ShellExecAsUser%COL_RESET%
           call :downloadfile %SHELLEXECASUSER_URL% downloads\shellexecasuser.zip
