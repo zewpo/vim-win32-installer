@@ -157,7 +157,6 @@ jobs:
 
           echo %COL_GREEN%Updating MSYS2%COL_RESET%
           C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -S --needed --noconfirm make"
-          @REM C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -S --needed --noconfirm make"
 
           echo %COL_GREEN%Download Ruby%COL_RESET%
           call :downloadfile %RUBY_URL% downloads\ruby.7z
@@ -255,6 +254,7 @@ jobs:
           mkdir GvimExt32
           pushd GvimExt
           start /wait cmd /c "call ^"%VCVARSALL% x64^" && nmake -f Make_mvc.mak CPU=AMD64 clean all > ..\gvimext64.log"
+          ping 127.0.0.1 -n 6 > nul
           popd
           type gvimext64.log
           copy GvimExt\gvimext.dll   GvimExt\gvimext64.dll
@@ -264,7 +264,8 @@ jobs:
           copy /Y GvimExt\*.reg      GvimExt64\
 
           pushd GvimExt
-          start /wait cmd /c "call ^"%VCVARSALL% x86^" && cd GvimExt && nmake -f Make_mvc.mak CPU=i386 clean all > ..\gvimext32.log"
+          start /wait cmd /c "call ^"%VCVARSALL% x86^" && nmake -f Make_mvc.mak CPU=i386 clean all > ..\gvimext32.log"
+          ping 127.0.0.1 -n 6 > nul
           popd
           type gvimext32.log
           copy GvimExt\gvimext.dll   GvimExt32\gvimext.dll
