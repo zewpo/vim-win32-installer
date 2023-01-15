@@ -133,7 +133,7 @@ jobs:
         shell: cmd
         run: |
           path C:\Program Files\7-Zip;%PYTHON_DIR%;%PYTHON3_DIR%;%PERL_DIR%\bin;%path%;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib
-          call "%VCVARSALL%" %VCARCH%
+          "%VCVARSALL%" %VCARCH%
           if not exist downloads mkdir downloads
 
           echo %COL_GREEN%Download Lua%COL_RESET%
@@ -247,7 +247,7 @@ jobs:
           echo %COL_GREEN%Build ONLY 64-bit version of gvimext.dll for the installer%COL_RESET%
           mkdir GvimExt64
           
-          call "%VCVARSALL%" %VCARCH%
+          "%VCVARSALL%" %VCARCH%
           pushd GvimExt
           nmake -f Make_mvc.mak CPU=AMD64 clean all > ..\gvimext.log
           popd
