@@ -248,7 +248,8 @@ jobs:
         shell: cmd
         timeout-minutes: 15
         run: |
-          echo on
+          setlocal ENABLEDELAYEDEXPANSION ENABLEEXTENSIONS
+          @echo on
           path C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
           call "%VCVARSALL%" %VCARCH%
           @echo on
@@ -263,11 +264,13 @@ jobs:
         shell: cmd
         timeout-minutes: 15
         run: |
-          echo on
+          setlocal ENABLEDELAYEDEXPANSION ENABLEEXTENSIONS
+          @echo on
           path C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
           call "%VCVARSALL%" %VCARCH%
           @echo on
           path %PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;%PATH%
+          path
           echo %COL_GREEN%Test gVim:%COL_RESET%
           cd vim\src\testdir
           nmake -nologo -f Make_mvc.mak clean
@@ -276,7 +279,7 @@ jobs:
       - name: Build Installer Packages
         shell: cmd
         run: |
-          setlocal ENABLEDELAYEDEXPANSION
+          setlocal ENABLEDELAYEDEXPANSION ENABLEEXTENSIONS
           call "%VCVARSALL%" %VCARCH%
           @echo on
 
