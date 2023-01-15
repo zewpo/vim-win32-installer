@@ -236,12 +236,14 @@ jobs:
           @echo on
           setlocal ENABLEDELAYEDEXPANSION
 
-          for /f "tokens=6 delims=.- " %%i in ('vim\src\vim.exe --version ^| find "IMproved"') do (
-            set TAG_NAME_A=%%i
-            set TAG_NAME_B=%%j
+          for /f "tokens=4,5 delims=.- " %%i in ('vim --version ^| find "IMproved"') do (
+            set TAG_NAME_I=%%i
+            set TAG_NAME_J=%%j
           )
-          for /f "tokens=4 delims=.- " %%i in ('vim\src\vim.exe --version ^| find "patches"') do set TAG_NAME_C=%%i
-          call set TAG_NAME=vzewpo%TAG_NAME_A%.%TAG_NAME_B%.%TAG_NAME_C%
+          for /f "tokens=4 delims=.- " %%k in ('vim --version ^| find "patches"') do (
+              set TAG_NAME_J=%%k
+          )
+          set TAG_NAME=%TAG_NAME_I%.%TAG_NAME_J%.%TAG_NAME_K%
 
           echo %TAG_NAME%
 
