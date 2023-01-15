@@ -243,19 +243,18 @@ jobs:
             set TAG_NAME_J=%%j
           )
           for /f "tokens=4 delims=.- " %%k in ('.\vim.exe --version ^| find "patches"') do (
-              set TAG_NAME_J=%%k
+            set PATCHLEVEL=%%k
           )
-          set TAG_NAME=%TAG_NAME_I%.%TAG_NAME_J%.%TAG_NAME_K%
+          set TAG_NAME=%TAG_NAME_I%.%TAG_NAME_J%.%PATCHLEVEL%
 
           echo %TAG_NAME%
-
-          for /f "delims=. tokens=1-3" %%i in ("%TAG_NAME%") do set PATCHLEVEL=%%k
 
           echo %COL_GREEN%Build ONLY 64-bit version of gvimext.dll for the installer%COL_RESET%
           mkdir GvimExt64
           
           call "%VCVARSALL%" %VCARCH%
-          ping 127.0.0.1 -n 6 > nul
+          @echo on
+          ping 127.0.0.1 -n 6
           pushd GvimExt
           nmake -f Make_mvc.mak CPU=AMD64 clean all > ..\gvimext.log
           popd
