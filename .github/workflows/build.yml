@@ -134,6 +134,7 @@ jobs:
         shell: cmd
         run: |
           echo on
+          where touch
           where sed
           where make
           where bash
