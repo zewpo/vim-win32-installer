@@ -353,40 +353,40 @@ jobs:
           src\vim -u NONE -i NONE --not-a-term -esNX -V1 -S ci/if_ver-1.vim -c quit
           src\vim -u NONE -i NONE --not-a-term -esNX -V1 -S ci/if_ver-2.vim -c quit
 
-      # - name: Prepare Artifact
-      #   shell: cmd
-      #   run: |
-      #     mkdir artifacts
-      #     copy vim\src\*.exe artifacts
-      #     copy vim\src\*.dll artifacts
-      #     copy *.zip artifacts
-      #     copy *.exe artifacts
-      #     copy *.dll artifacts
+      - name: Prepare Artifact
+        shell: cmd
+        run: |
+          mkdir artifacts
+          copy vim\src\*.exe artifacts
+          copy vim\src\*.dll artifacts
+          copy *.zip artifacts
+          copy *.exe artifacts
+          copy *.dll artifacts
       
-      # - name: Upload Artifact
-      #   uses: actions/upload-artifact@v1
-      #   with:
-      #     name: vim64-msvc
-      #     path: ./artifacts
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: vim64-msvc
+          path: ./artifacts
 
-      # - name: Test Vim and show the results
-      #   shell: cmd
-      #   timeout-minutes: 15
-      #   run: |
-      #     PATH %LUA_DIR%;C:\msys64\mingw64\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
-      #     call "%VCVARSALL%" %VCARCH%
-      #     echo %COL_GREEN%Test Vim:%COL_RESET%
-      #     cd vim\src\testdir
-      #     nmake -nologo -f Make_mvc.mak clean
-      #     nmake -nologo -f Make_mvc.mak VIMPROG=..\vim || exit 1
+      - name: Test Vim and show the results
+        shell: cmd
+        timeout-minutes: 15
+        run: |
+          PATH %LUA_DIR%;C:\msys64\mingw64\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
+          call "%VCVARSALL%" %VCARCH%
+          echo %COL_GREEN%Test Vim:%COL_RESET%
+          cd vim\src\testdir
+          nmake -nologo -f Make_mvc.mak clean
+          nmake -nologo -f Make_mvc.mak VIMPROG=..\vim || exit 1
 
-      # - name: Test gVim and show the results
-      #   shell: cmd
-      #   timeout-minutes: 15
-      #   run: |
-      #     PATH %LUA_DIR%;C:\msys64\mingw64\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
-      #     call "%VCVARSALL%" %VCARCH%
-      #     echo %COL_GREEN%Test gVim:%COL_RESET%
-      #     cd vim\src\testdir
-      #     nmake -nologo -f Make_mvc.mak clean
-      #     nmake -nologo -f Make_mvc.mak VIMPROG=..\gvim || exit 1
+      - name: Test gVim and show the results
+        shell: cmd
+        timeout-minutes: 15
+        run: |
+          PATH %LUA_DIR%;C:\msys64\mingw64\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
+          call "%VCVARSALL%" %VCARCH%
+          echo %COL_GREEN%Test gVim:%COL_RESET%
+          cd vim\src\testdir
+          nmake -nologo -f Make_mvc.mak clean
+          nmake -nologo -f Make_mvc.mak VIMPROG=..\gvim || exit 1
