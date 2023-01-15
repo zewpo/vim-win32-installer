@@ -170,8 +170,8 @@ jobs:
           copy /Y D:\gettext32\libintl-8.dll    vim\src\
           
 
-          echo %COL_GREEN%Updating MSYS2%COL_RESET%
-          C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -S --needed --noconfirm make"
+          @REM echo %COL_GREEN%Updating MSYS2%COL_RESET%
+          @REM C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -S --needed --noconfirm make"
 
           echo %COL_GREEN%Download Ruby%COL_RESET%
           call :downloadfile %RUBY_URL% downloads\ruby.7z
@@ -324,7 +324,9 @@ jobs:
 
           set CHERE_INVOKING=1
           pushd ..\runtime\doc
-          C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -lc "touch ../../src/auto/config.mk && make uganda.nsis.txt"
+          @REM C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -lc "touch ../../src/auto/config.mk && make uganda.nsis.txt"
+          touch ..\..\src\auto\config.mk
+          make uganda.nsis.txt
           popd
           copy gvim.exe gvim_ole.exe
           copy vim.exe vimw32.exe
@@ -381,7 +383,7 @@ jobs:
         run: |
           echo on
           dir
-          PATH %LUA_DIR%;C:\msys64\mingw64\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
+          PATH %LUA_DIR%;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
           call "%VCVARSALL%" %VCARCH%
           ping 127.0.0.1 -n 6 > nul
           echo %COL_GREEN%Test Vim:%COL_RESET%
@@ -394,7 +396,7 @@ jobs:
         timeout-minutes: 15
         run: |
           echo on
-          PATH %LUA_DIR%;C:\msys64\mingw64\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
+          PATH %LUA_DIR%;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
           call "%VCVARSALL%" %VCARCH%
           ping 127.0.0.1 -n 6 > nul
           echo %COL_GREEN%Test gVim:%COL_RESET%
