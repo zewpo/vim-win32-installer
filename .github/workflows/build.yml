@@ -257,7 +257,7 @@ jobs:
           path C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
           call "%VCVARSALL%" %VCARCH%
           @echo on
-          path %GITHUB_WORKSPACE%;%PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;C:\msys64\mingw64\bin;%PATH%
+          path %GITHUB_WORKSPACE%;%GITHUB_WORKSPACE%\vim\src\tee;%GITHUB_WORKSPACE%\vim\src\xxd;%PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;C:\msys64\mingw64\bin;%PATH%
           path
 
           echo %COL_GREEN%Test Vim:%COL_RESET%
@@ -274,7 +274,7 @@ jobs:
           path C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
           call "%VCVARSALL%" %VCARCH%
           @echo on
-          path %GITHUB_WORKSPACE%;%PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;C:\msys64\mingw64\bin;%PATH%
+          path %GITHUB_WORKSPACE%;%GITHUB_WORKSPACE%\vim\src\tee;%GITHUB_WORKSPACE%\vim\src\xxd;%PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;C:\msys64\mingw64\bin;%PATH%
           path
 
           echo %COL_GREEN%Test gVim:%COL_RESET%
