@@ -253,17 +253,24 @@ jobs:
 
           echo %TAG_NAME%
 
-          echo %COL_GREEN%Build ONLY 64-bit version of gvimext.dll for the installer%COL_RESET%
+          echo %COL_GREEN%Build 64- and 32-bit versions of gvimext.dll for the installer%COL_RESET%
           mkdir GvimExt64
-          pushd GvimExt
-          nmake -f Make_mvc.mak CPU=AMD64 clean all > ..\gvimext.log
-          popd
-          type gvimext.log
+          mkdir GvimExt32
+          
+          start /wait cmd /c "%VCVARSALL% x64 && cd GvimExt && nmake -f Make_mvc.mak CPU=AMD64 clean all > ..\gvimext64.log"
+          type gvimext64.log
           copy GvimExt\gvimext.dll   GvimExt\gvimext64.dll
-          copy GvimExt\gvimext.dll   GvimExt64\gvimext.dll
+          move GvimExt\gvimext.dll   GvimExt64\gvimext.dll
           copy /Y GvimExt\README.txt GvimExt64\
           copy /Y GvimExt\*.inf      GvimExt64\
           copy /Y GvimExt\*.reg      GvimExt64\
+
+          start /wait cmd /c "%VCVARSALL% x86 && cd GvimExt && nmake -f Make_mvc.mak CPU=i386 clean all > ..\gvimext32.log"
+          type gvimext32.log
+          copy GvimExt\gvimext.dll   GvimExt32\gvimext.dll
+          copy /Y GvimExt\README.txt GvimExt32\
+          copy /Y GvimExt\*.inf      GvimExt32\
+          copy /Y GvimExt\*.reg      GvimExt32\
 
           echo %COL_GREEN%Create zip packages%COL_RESET%
           7z a ..\..\gvim_%TAG_NAME:~1%_x64_pdb.zip *.pdb
@@ -274,10 +281,19 @@ jobs:
           copy /Y xxd\*.exe ..\runtime
           copy /Y tee\*.exe ..\runtime
           mkdir ..\runtime\GvimExt64
+          mkdir ..\runtime\GvimExt32
 
           copy /Y GvimExt64\*.*                    ..\runtime\GvimExt64\
           copy /Y D:\gettext64\libiconv-2.dll      ..\runtime\GvimExt64\
           copy /Y D:\gettext64\libintl-8.dll       ..\runtime\GvimExt64\
+
+          copy /Y GvimExt32\*.*                    ..\runtime\GvimExt32\
+          copy /Y D:\gettext32\libiconv-2.dll      ..\runtime\GvimExt32\
+          copy /Y D:\gettext32\libintl-8.dll       ..\runtime\GvimExt32\
+
+          @REM # if exist D:\gettext32\libgcc_s_sjlj-1.dll del D:\gettext32\libgcc_s_sjlj-1.dll
+          @REM # copy /Y D:\gettext32\libiconv-2.dll   ..\runtime\
+          @REM # copy /Y D:\gettext32\libintl-8.dll    ..\runtime\
 
           copy /Y ..\..\diff.exe ..\runtime\
           copy /Y D:\gettext64\libiconv-2.dll   ..\runtime\
