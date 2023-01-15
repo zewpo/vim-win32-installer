@@ -136,6 +136,7 @@ jobs:
           echo on
           path C:\Program Files\7-Zip;%PYTHON_DIR%;%PYTHON3_DIR%;%PERL_DIR%\bin;%path%;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib
           call "%VCVARSALL%" %VCARCH%
+          @echo on
           if not exist downloads mkdir downloads
 
           echo %COL_GREEN%Download Lua%COL_RESET%
@@ -224,7 +225,9 @@ jobs:
         run: |
           PATH C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
           call "%VCVARSALL%" %VCARCH%
+          @echo on
           path %PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;%PATH%
+          path
           cd vim\src
           nmake -nologo -f Make_mvc.mak ^
             FEATURES=HUGE POSTSCRIPT=yes DEBUG=no ^
@@ -246,9 +249,11 @@ jobs:
         timeout-minutes: 15
         run: |
           echo on
-          PATH C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+          path C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
           call "%VCVARSALL%" %VCARCH%
-          PATH %PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;%PATH%
+          @echo on
+          path %PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;%PATH%
+          path
           echo %COL_GREEN%Test Vim:%COL_RESET%
           cd vim\src\testdir
           nmake -nologo -f Make_mvc.mak clean
@@ -259,9 +264,10 @@ jobs:
         timeout-minutes: 15
         run: |
           echo on
-          PATH C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+          path C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
           call "%VCVARSALL%" %VCARCH%
-          PATH %PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;%PATH%
+          @echo on
+          path %PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;%PATH%
           echo %COL_GREEN%Test gVim:%COL_RESET%
           cd vim\src\testdir
           nmake -nologo -f Make_mvc.mak clean
