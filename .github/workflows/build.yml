@@ -157,9 +157,10 @@ jobs:
           copy /Y D:\gettext64\libiconv-2.dll   vim\src\
           copy /Y D:\gettext64\libintl-8.dll    vim\src\
 
-          @REM echo on
-          @REM C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -Syu --noconfirm gettext"
-          @REM echo off
+          echo on
+          echo %COL_GREEN%Updating MSYS2%COL_RESET%
+          C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -Syu --needed --noconfirm gettext base-devel mingw-w64-x86_64-toolchain"
+          echo off
 
           echo %COL_GREEN%Download Ruby%COL_RESET%
           call :downloadfile %RUBY_URL% downloads\ruby.7z
@@ -282,7 +283,7 @@ jobs:
 
           copy /Y winpty* ..\runtime\
           copy /Y winpty* ..\..\
-          set dir=vim%TAG_NAME_I%TAG_NAME_J%
+          set dir=vim%TAG_NAME_I%%TAG_NAME_J%
           mkdir ..\vim\%dir%
           xcopy ..\runtime ..\vim\%dir% /Y /E /V /I /H /R /Q
           7z a ..\..\gvim_%TAG_NAME:~1%_x64.zip ..\vim
