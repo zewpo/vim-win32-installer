@@ -231,7 +231,7 @@ jobs:
           cd vim\src
           nmake -nologo -f Make_mvc.mak ^
             FEATURES=HUGE POSTSCRIPT=yes DEBUG=no ^
-            GUI=yes TERMINAL=yes IME=yes ICONV=yes VIMDLL=yes ^
+            GUI=no TERMINAL=yes IME=yes ICONV=yes VIMDLL=no ^
             DYNAMIC_PYTHON=yes PYTHON=%PYTHON_DIR% ^
             DYNAMIC_PYTHON3=yes PYTHON3=%PYTHON3_DIR% ^
             DYNAMIC_LUA=yes LUA=%LUA_DIR% ^
