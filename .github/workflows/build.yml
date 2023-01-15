@@ -134,7 +134,6 @@ jobs:
         run: |
           path C:\Program Files\7-Zip;%PYTHON_DIR%;%PYTHON3_DIR%;%PERL_DIR%\bin;%path%;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib
           call "%VCVARSALL%" %VCARCH%
-          ping 127.0.0.1 -n 6 > nul
           if not exist downloads mkdir downloads
 
           echo %COL_GREEN%Download Lua%COL_RESET%
@@ -213,7 +212,6 @@ jobs:
         shell: cmd
         run: |
           call "%VCVARSALL%" %VCARCH%
-          ping 127.0.0.1 -n 6 > nul
           cd vim\src
           nmake -nologo -f Make_mvc.mak ^
             FEATURES=HUGE POSTSCRIPT=yes DEBUG=no ^
@@ -237,7 +235,6 @@ jobs:
           setlocal ENABLEDELAYEDEXPANSION
           call "%VCVARSALL%" %VCARCH%
           @echo on
-          ping 127.0.0.1 -n 6
 
           cd vim\src
 
@@ -248,7 +245,7 @@ jobs:
           for /f "tokens=4 delims=.- " %%k in ('.\vim.exe --version ^| find "patches"') do (
             set PATCHLEVEL=%%k
           )
-          set TAG_NAME=%TAG_NAME_I%.%TAG_NAME_J%.%PATCHLEVEL%
+          set TAG_NAME=vzewpo%TAG_NAME_I%.%TAG_NAME_J%.%PATCHLEVEL%
 
           echo %TAG_NAME%
 
@@ -290,7 +287,7 @@ jobs:
           7z a ..\..\gvim_%TAG_NAME:~1%_x64.zip ..\vim
 
           set CHERE_INVOKING=1
-          C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -lc "touch ../../src/auto/config.mk && make uganda.nsis.txt"
+          C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -lc "pwd && ls -al && touch ../../src/auto/config.mk && make uganda.nsis.txt"
           copy gvim.exe gvim_ole.exe
           copy vim.exe vimw32.exe
           copy tee\tee.exe teew32.exe
