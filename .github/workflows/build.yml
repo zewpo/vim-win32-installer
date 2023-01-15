@@ -254,7 +254,7 @@ jobs:
           mkdir GvimExt64
           mkdir GvimExt32
           
-          start /wait cmd /c "%VCVARSALL% x64 && cd GvimExt && nmake -f Make_mvc.mak CPU=AMD64 clean all > ..\gvimext64.log"
+          start /wait cmd /c "echo on && %VCVARSALL% x64 && cd GvimExt && nmake -f Make_mvc.mak CPU=AMD64 clean all > ..\gvimext64.log"
           type gvimext64.log
           copy GvimExt\gvimext.dll   GvimExt\gvimext64.dll
           move GvimExt\gvimext.dll   GvimExt64\gvimext.dll
@@ -262,7 +262,7 @@ jobs:
           copy /Y GvimExt\*.inf      GvimExt64\
           copy /Y GvimExt\*.reg      GvimExt64\
 
-          start /wait cmd /c "%VCVARSALL% x86 && cd GvimExt && nmake -f Make_mvc.mak CPU=i386 clean all > ..\gvimext32.log"
+          start /wait cmd /c "echo on && %VCVARSALL% x86 && cd GvimExt && nmake -f Make_mvc.mak CPU=i386 clean all > ..\gvimext32.log"
           type gvimext32.log
           copy GvimExt\gvimext.dll   GvimExt32\gvimext.dll
           copy /Y GvimExt\README.txt GvimExt32\
