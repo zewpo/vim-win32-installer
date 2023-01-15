@@ -134,11 +134,6 @@ jobs:
         shell: cmd
         run: |
           echo on
-          where touch
-          where sed
-          where make
-          where bash
-          bash --version
           path C:\Program Files\7-Zip;%PYTHON_DIR%;%PYTHON3_DIR%;%PERL_DIR%\bin;%path%;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib
           call "%VCVARSALL%" %VCARCH%
           if not exist downloads mkdir downloads
@@ -244,6 +239,33 @@ jobs:
           nmake -f Make_mvc.mak GETTEXT_PATH=C:\msys64\usr\bin VIMRUNTIME=..\..\runtime install-all || exit 1
           popd
 
+      - name: Test Vim and show the results
+        shell: cmd
+        timeout-minutes: 15
+        run: |
+          echo on
+          dir
+          PATH %LUA_DIR%;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
+          call "%VCVARSALL%" %VCARCH%
+          ping 127.0.0.1 -n 6 > nul
+          echo %COL_GREEN%Test Vim:%COL_RESET%
+          cd vim\src\testdir
+          nmake -nologo -f Make_mvc.mak clean
+          nmake -nologo -f Make_mvc.mak VIMPROG=..\vim || exit 1
+
+      - name: Test gVim and show the results
+        shell: cmd
+        timeout-minutes: 15
+        run: |
+          echo on
+          PATH %LUA_DIR%;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
+          call "%VCVARSALL%" %VCARCH%
+          ping 127.0.0.1 -n 6 > nul
+          echo %COL_GREEN%Test gVim:%COL_RESET%
+          cd vim\src\testdir
+          nmake -nologo -f Make_mvc.mak clean
+          nmake -nologo -f Make_mvc.mak VIMPROG=..\gvim || exit 1
+
       - name: Build Installer Packages
         shell: cmd
         run: |
@@ -322,9 +344,7 @@ jobs:
           xcopy ..\runtime ..\vim\%dir% /Y /E /V /I /H /R /Q
           7z a ..\..\gvim_%TAG_NAME:~1%_x64.zip ..\vim
 
-          set CHERE_INVOKING=1
           pushd ..\runtime\doc
-          @REM C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -lc "touch ../../src/auto/config.mk && make uganda.nsis.txt"
           touch ..\..\src\auto\config.mk
           make uganda.nsis.txt
           popd
@@ -344,7 +364,7 @@ jobs:
       - name: Check version
         shell: cmd
         run: |
-          PATH %LUA_DIR%;C:\msys64\mingw64\bin;%PATH%;%PYTHON3_DIR%
+          PATH %LUA_DIR%;%PATH%;%PYTHON3_DIR%
           cd vim
 
           echo %COL_GREEN%gVim Version%COL_RESET%
@@ -377,29 +397,3 @@ jobs:
           name: vim64-msvc
           path: ./artifacts
 
-      - name: Test Vim and show the results
-        shell: cmd
-        timeout-minutes: 15
-        run: |
-          echo on
-          dir
-          PATH %LUA_DIR%;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
-          call "%VCVARSALL%" %VCARCH%
-          ping 127.0.0.1 -n 6 > nul
-          echo %COL_GREEN%Test Vim:%COL_RESET%
-          cd vim\src\testdir
-          nmake -nologo -f Make_mvc.mak clean
-          nmake -nologo -f Make_mvc.mak VIMPROG=..\vim || exit 1
-
-      - name: Test gVim and show the results
-        shell: cmd
-        timeout-minutes: 15
-        run: |
-          echo on
-          PATH %LUA_DIR%;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
-          call "%VCVARSALL%" %VCARCH%
-          ping 127.0.0.1 -n 6 > nul
-          echo %COL_GREEN%Test gVim:%COL_RESET%
-          cd vim\src\testdir
-          nmake -nologo -f Make_mvc.mak clean
-          nmake -nologo -f Make_mvc.mak VIMPROG=..\gvim || exit 1
