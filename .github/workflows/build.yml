@@ -50,7 +50,7 @@ jobs:
       PERL_DIR: D:\Strawberry\perl
       # Racket
       RACKET_VER: 3m_da32rk
-      RACKET_RELEASE: 8.3
+      RACKET_RELEASE: 8.7
       RACKET_URL: https://www.cs.utah.edu/plt/installers/%RACKET_RELEASE%/racket-minimal-%RACKET_RELEASE%-x86_64-win32-bc.tgz
       RACKET_DIR: D:\racket
       # Ruby
@@ -236,7 +236,7 @@ jobs:
 
           for /f "tokens=5" %%i in ('vim\src\vim.exe --version ^| find "IMproved"') do set TAG_NAME_A_B=%%i
           for /f "tokens=3" %%i in ('vim\src\vim.exe --version ^| find "patches"') do set TAG_NAME_C=%%i
-          call set TAG_NAME=vzewpo%TAG_NAME_A_B%.%TAG_NAME_C%
+          call set TAG_NAME=vzewpo%TAG_NAME_A_B%.%%TAG_NAME_C:~2%%
 
           echo %TAG_NAME%
 
