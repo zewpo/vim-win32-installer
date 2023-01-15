@@ -156,8 +156,8 @@ jobs:
           copy /Y D:\gettext64\libintl-8.dll    vim\src\
 
           echo %COL_GREEN%Updating MSYS2%COL_RESET%
-          C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -Syu --needed --noconfirm gettext base-devel mingw-w64-x86_64-toolchain" > nul
-          C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -Syu --needed --noconfirm gettext base-devel mingw-w64-x86_64-toolchain"
+          C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -S --needed --noconfirm make"
+          @REM C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -S --needed --noconfirm make"
 
           echo %COL_GREEN%Download Ruby%COL_RESET%
           call :downloadfile %RUBY_URL% downloads\ruby.7z
@@ -170,7 +170,7 @@ jobs:
           pushd ..\ruby
           call win32\configure.bat
           nmake .config.h.time || exit 1
-          dir
+          dir .ext
           xcopy /s .ext\include %RUBY_DIR%\include\ruby-%RUBY_API_VER_LONG%
           popd
           @echo off
@@ -253,8 +253,9 @@ jobs:
           echo %COL_GREEN%Build 64- and 32-bit versions of gvimext.dll for the installer%COL_RESET%
           mkdir GvimExt64
           mkdir GvimExt32
-          
-          start /wait cmd /c "echo on && %VCVARSALL% x64 && cd GvimExt && nmake -f Make_mvc.mak CPU=AMD64 clean all > ..\gvimext64.log"
+          pushd GvimExt
+          start /wait cmd /c "call ^"%VCVARSALL% x64^" && nmake -f Make_mvc.mak CPU=AMD64 clean all > ..\gvimext64.log"
+          popd
           type gvimext64.log
           copy GvimExt\gvimext.dll   GvimExt\gvimext64.dll
           move GvimExt\gvimext.dll   GvimExt64\gvimext.dll
@@ -262,7 +263,9 @@ jobs:
           copy /Y GvimExt\*.inf      GvimExt64\
           copy /Y GvimExt\*.reg      GvimExt64\
 
-          start /wait cmd /c "echo on && %VCVARSALL% x86 && cd GvimExt && nmake -f Make_mvc.mak CPU=i386 clean all > ..\gvimext32.log"
+          pushd GvimExt
+          start /wait cmd /c "call ^"%VCVARSALL% x86^" && cd GvimExt && nmake -f Make_mvc.mak CPU=i386 clean all > ..\gvimext32.log"
+          popd
           type gvimext32.log
           copy GvimExt\gvimext.dll   GvimExt32\gvimext.dll
           copy /Y GvimExt\README.txt GvimExt32\
@@ -306,7 +309,6 @@ jobs:
           set CHERE_INVOKING=1
           pushd ..\runtime\doc
           C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -lc "touch ../../src/auto/config.mk && make uganda.nsis.txt"
-          type uganda.nsis.txt
           popd
           copy gvim.exe gvim_ole.exe
           copy vim.exe vimw32.exe
