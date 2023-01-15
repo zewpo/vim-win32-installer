@@ -170,6 +170,7 @@ jobs:
           pushd ..\ruby
           call win32\configure.bat
           nmake .config.h.time || exit 1
+          dir
           xcopy /s .ext\include %RUBY_DIR%\include\ruby-%RUBY_API_VER_LONG%
           popd
           @echo off
