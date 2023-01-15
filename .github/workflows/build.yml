@@ -41,7 +41,8 @@ jobs:
       # winpty
       WINPTY_URL: https://github.com/rprichard/winpty/releases/download/0.4.3/winpty-0.4.3-msvc2015.zip
       # GetText libintl.dll and iconv.dll
-      GETTEXT_URL: https://github.com/mlocati/gettext-iconv-windows/releases/download/v0.21-v1.16/gettext0.21-iconv1.16-shared-64.zip
+      GETTEXT64_URL: https://github.com/mlocati/gettext-iconv-windows/releases/download/v0.21-v1.16/gettext0.21-iconv1.16-shared-64.zip
+      GETTEXT32_URL: https://github.com/mlocati/gettext-iconv-windows/releases/download/v0.21-v1.16/gettext0.21-iconv1.16-shared-32.zip
       # Perl
       PERL_VER: 532
       PERL_RELEASE: 5.32.1.1
@@ -115,7 +116,8 @@ jobs:
           type NUL > urls.txt
           call echo %LUA_URL%>> urls.txt
           call echo %WINPTY_URL%>> urls.txt
-          call echo %GETTEXT_URL%>> urls.txt
+          call echo %GETTEXT32_URL%>> urls.txt
+          call echo %GETTEXT64_URL%>> urls.txt
           call echo %RUBY_URL%>> urls.txt
           call echo %PERL_URL%>> urls.txt
           call echo %UPX_URL%>> urls.txt
@@ -149,11 +151,18 @@ jobs:
           copy /Y D:\winpty\%WARCH%\bin\winpty.dll        vim\src\winpty64.dll
           copy /Y D:\winpty\%WARCH%\bin\winpty-agent.exe  vim\src\
 
-          echo %COL_GREEN%Download GetText libintl.dll and iconv.dll%COL_RESET%
-          call :downloadfile %GETTEXT_URL% downloads\gettext64.zip
+          echo %COL_GREEN%Download 64 bit GetText libintl.dll and iconv.dll%COL_RESET%
+          call :downloadfile %GETTEXT64_URL% downloads\gettext64.zip
           7z e -y downloads\gettext64.zip -oD:\gettext64 > nul || exit 1
           copy /Y D:\gettext64\libiconv-2.dll   vim\src\
           copy /Y D:\gettext64\libintl-8.dll    vim\src\
+
+          echo %COL_GREEN%Download 32 bit GetText libintl.dll and iconv.dll%COL_RESET%
+          call :downloadfile %GETTEXT32_URL% downloads\gettext32.zip
+          7z e -y downloads\gettext32.zip -oD:\gettext32 > nul || exit 1
+          copy /Y D:\gettext32\libiconv-2.dll   vim\src\
+          copy /Y D:\gettext32\libintl-8.dll    vim\src\
+          
 
           echo %COL_GREEN%Updating MSYS2%COL_RESET%
           C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -S --needed --noconfirm make"
@@ -169,7 +178,7 @@ jobs:
           pushd ..\ruby
           call win32\configure.bat
           nmake .config.h.time || exit 1
-          dir .ext
+          dir .ext\include
           xcopy /s .ext\include %RUBY_DIR%\include\ruby-%RUBY_API_VER_LONG%
           popd
           @echo off
@@ -319,7 +328,7 @@ jobs:
           copy uninstall.exe uninstallw32.exe
           pushd ..\nsis
           7z x icons.zip > nul
-          "%ProgramFiles(x86)%\NSIS\makensis" /DVIMRT=..\runtime /DGETTEXT=D:\ /DWIN64=1 /DPATCHLEVEL=%PATCHLEVEL% gvim.nsi "/XOutFile ..\..\gvim_%TAG_NAME:~1%_x64.exe"
+          "%ProgramFiles(x86)%\NSIS\makensis" /DVIMRT=..\runtime /DGETTEXT=D: /DWIN64=1 /DPATCHLEVEL=%PATCHLEVEL% gvim.nsi "/XOutFile ..\..\gvim_%TAG_NAME:~1%_x64.exe"
           popd
           7z a unsigned-gvim_%TAG_NAME:~1%_x64.zip gvim_%TAG_NAME:~1%_x64.zip gvim*.exe
 
