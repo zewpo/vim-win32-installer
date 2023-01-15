@@ -40,7 +40,7 @@ jobs:
       # Other dependencies
       # winpty
       WINPTY_URL: https://github.com/rprichard/winpty/releases/download/0.4.3/winpty-0.4.3-msvc2015.zip
-      # GetText libintl.dll and iconv.dll
+      # GetText libintl.dll and libiconv.dll
       GETTEXT64_URL: https://github.com/mlocati/gettext-iconv-windows/releases/download/v0.21-v1.16/gettext0.21-iconv1.16-shared-64.zip
       GETTEXT32_URL: https://github.com/mlocati/gettext-iconv-windows/releases/download/v0.21-v1.16/gettext0.21-iconv1.16-shared-32.zip
       # Perl
@@ -257,7 +257,7 @@ jobs:
           path C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
           call "%VCVARSALL%" %VCARCH%
           @echo on
-          path %GITHUB_WORKSPACE%;%GITHUB_WORKSPACE%\vim\src\tee;%GITHUB_WORKSPACE%\vim\src\xxd;%PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;C:\msys64\mingw64\bin;%PATH%
+          path %GITHUB_WORKSPACE%;%GITHUB_WORKSPACE%\vim\src\tee;%GITHUB_WORKSPACE%\vim\src\xxd;%PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;C:\msys64\mingw64\bin;c:\msys64\usr\bin;%PATH%
           path
 
           echo %COL_GREEN%Test Vim:%COL_RESET%
@@ -274,7 +274,7 @@ jobs:
           path C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
           call "%VCVARSALL%" %VCARCH%
           @echo on
-          path %GITHUB_WORKSPACE%;%GITHUB_WORKSPACE%\vim\src\tee;%GITHUB_WORKSPACE%\vim\src\xxd;%PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;C:\msys64\mingw64\bin;%PATH%
+          path %GITHUB_WORKSPACE%;%GITHUB_WORKSPACE%\vim\src\tee;%GITHUB_WORKSPACE%\vim\src\xxd;%PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;C:\msys64\mingw64\bin;c:\msys64\usr\bin;%PATH%
           path
 
           echo %COL_GREEN%Test gVim:%COL_RESET%
