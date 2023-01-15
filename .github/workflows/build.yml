@@ -229,9 +229,8 @@ jobs:
           path %PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;%PATH%
           path
           cd vim\src
-          nmake -nologo -f Make_mvc.mak ^
-            FEATURES=HUGE POSTSCRIPT=yes DEBUG=no ^
-            GUI=no TERMINAL=yes IME=yes ICONV=yes VIMDLL=no ^
+          set NMAKE_ARGS=FEATURES=HUGE POSTSCRIPT=yes DEBUG=no ^
+            IME=yes ICONV=yes VIMDLL=no ^
             DYNAMIC_PYTHON=yes PYTHON=%PYTHON_DIR% ^
             DYNAMIC_PYTHON3=yes PYTHON3=%PYTHON3_DIR% ^
             DYNAMIC_LUA=yes LUA=%LUA_DIR% ^
@@ -239,6 +238,11 @@ jobs:
             DYNAMIC_RUBY=yes RUBY=%RUBY_DIR% RUBY_MSVCRT_NAME=msvcrt ^
             DYNAMIC_MZSCHEME=yes MZSCHEME_VER=%RACKET_VER% MZSCHEME=%RACKET_DIR% ^
             SODIUM=%SODIUM_DIR%
+
+          nmake -nologo -f Make_mvc.mak GUI=no %NMAKE_ARGS%
+
+          nmake -nologo -f Make_mvc.mak GUI=yes %NMAKE_ARGS%
+
 
           pushd po
           nmake -f Make_mvc.mak GETTEXT_PATH=C:\msys64\usr\bin VIMRUNTIME=..\..\runtime install-all || exit 1
