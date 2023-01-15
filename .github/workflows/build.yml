@@ -379,6 +379,7 @@ jobs:
         timeout-minutes: 15
         run: |
           echo on
+          dir
           PATH %LUA_DIR%;C:\msys64\mingw64\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
           call "%VCVARSALL%" %VCARCH%
           ping 127.0.0.1 -n 6 > nul
