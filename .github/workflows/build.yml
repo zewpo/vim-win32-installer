@@ -113,6 +113,7 @@ jobs:
       - name: Create a list of download URLs
         shell: cmd
         run: |
+          setlocal ENABLEDELAYEDEXPANSION
           type NUL > urls.txt
           echo %LUA_RELEASE%>> urls.txt
           echo %WINPTY_URL%>> urls.txt
@@ -287,7 +288,9 @@ jobs:
           7z a ..\..\gvim_%TAG_NAME:~1%_x64.zip ..\vim
 
           set CHERE_INVOKING=1
-          C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -lc "cd ../runtime/doc && touch ../../src/auto/config.mk && make uganda.nsis.txt"
+          pushd ..\runtime\doc
+          C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -lc "touch ../../src/auto/config.mk && make uganda.nsis.txt"
+          popd
           copy gvim.exe gvim_ole.exe
           copy vim.exe vimw32.exe
           copy tee\tee.exe teew32.exe
