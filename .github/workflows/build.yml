@@ -49,7 +49,7 @@ jobs:
       PERL_URL: https://strawberryperl.com/download/%PERL_RELEASE%/strawberry-perl-%PERL_RELEASE%-64bit-portable.zip
       PERL_DIR: D:\Strawberry\perl
       # Racket
-      RACKET_VER: 3m_da32rk
+      RACKET_VER: 3m_dcgt6o
       RACKET_RELEASE: 8.7
       RACKET_URL: https://www.cs.utah.edu/plt/installers/%RACKET_RELEASE%/racket-minimal-%RACKET_RELEASE%-x86_64-win32-bc.tgz
       RACKET_DIR: D:\racket
@@ -223,7 +223,7 @@ jobs:
             DYNAMIC_LUA=yes LUA=%LUA_DIR% ^
             DYNAMIC_PERL=yes PERL=%PERL_DIR% ^
             DYNAMIC_RUBY=yes RUBY=%RUBY_DIR% RUBY_MSVCRT_NAME=msvcrt ^
-            DYNAMIC_MZSCHEME=yes MZSCHEME=%RACKET_DIR% ^
+            DYNAMIC_MZSCHEME=yes MZSCHEME_VER=%RACKET_VER% MZSCHEME=%RACKET_DIR% ^
             SODIUM=%SODIUM_DIR%
 
           pushd po
