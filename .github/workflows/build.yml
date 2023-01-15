@@ -195,9 +195,6 @@ jobs:
           call :downloadfile %RACKET_URL% downloads\racket.tgz
           7z x -tgzip -so downloads/racket.tgz | 7z x -aoa -si -ttar -oD:\
           type NUL > %RACKET_DIR%\include\bc_suffix.h
-          where raco
-          dir %RACKET_DIR%
-          dir %RACKET_DIR%\lib
           raco pkg install -i --auto r5rs-lib
           @echo on
 
