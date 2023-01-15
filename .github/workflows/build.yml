@@ -222,8 +222,9 @@ jobs:
       - name: Build (MSVC)
         shell: cmd
         run: |
-          path
+          PATH C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
           call "%VCVARSALL%" %VCARCH%
+          path %PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;%PATH%
           cd vim\src
           nmake -nologo -f Make_mvc.mak ^
             FEATURES=HUGE POSTSCRIPT=yes DEBUG=no ^
@@ -245,10 +246,9 @@ jobs:
         timeout-minutes: 15
         run: |
           echo on
-          dir
-          PATH %LUA_DIR%;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
+          PATH C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
           call "%VCVARSALL%" %VCARCH%
-          ping 127.0.0.1 -n 6 > nul
+          PATH %PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;%PATH%
           echo %COL_GREEN%Test Vim:%COL_RESET%
           cd vim\src\testdir
           nmake -nologo -f Make_mvc.mak clean
@@ -259,9 +259,9 @@ jobs:
         timeout-minutes: 15
         run: |
           echo on
-          PATH %LUA_DIR%;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
+          PATH C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
           call "%VCVARSALL%" %VCARCH%
-          ping 127.0.0.1 -n 6 > nul
+          PATH %PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;%PATH%
           echo %COL_GREEN%Test gVim:%COL_RESET%
           cd vim\src\testdir
           nmake -nologo -f Make_mvc.mak clean
@@ -360,7 +360,6 @@ jobs:
           "%ProgramFiles(x86)%\NSIS\makensis" /DVIMRT=..\runtime /DGETTEXT=D: /DWIN64=1 /DPATCHLEVEL=%PATCHLEVEL% gvim.nsi "/XOutFile ..\..\gvim_%TAG_NAME:~1%_x64.exe"
           popd
           7z a unsigned-gvim_%TAG_NAME:~1%_x64.zip gvim_%TAG_NAME:~1%_x64.zip gvim*.exe
-
 
       - name: Check version
         shell: cmd
