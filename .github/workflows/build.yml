@@ -263,7 +263,7 @@ jobs:
           mkdir GvimExt32
           pushd GvimExt
           start /wait cmd /c "call ^"%VCVARSALL% x64^" && nmake -f Make_mvc.mak CPU=AMD64 clean all > ..\gvimext64.log"
-          ping 127.0.0.1 -n 6 > nul
+          @REM ping 127.0.0.1 -n 6 > nul
           popd
           type gvimext64.log
           copy GvimExt\gvimext.dll   GvimExt\gvimext64.dll
@@ -274,7 +274,7 @@ jobs:
 
           pushd GvimExt
           start /wait cmd /c "call ^"%VCVARSALL% x86^" && nmake -f Make_mvc.mak CPU=i386 clean all > ..\gvimext32.log"
-          ping 127.0.0.1 -n 6 > nul
+          @REM ping 127.0.0.1 -n 6 > nul
           popd
           type gvimext32.log
           copy GvimExt\gvimext.dll   GvimExt32\gvimext.dll
@@ -373,8 +373,10 @@ jobs:
         shell: cmd
         timeout-minutes: 15
         run: |
+          echo on
           PATH %LUA_DIR%;C:\msys64\mingw64\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
           call "%VCVARSALL%" %VCARCH%
+          ping 127.0.0.1 -n 6 > nul
           echo %COL_GREEN%Test Vim:%COL_RESET%
           cd vim\src\testdir
           nmake -nologo -f Make_mvc.mak clean
@@ -384,8 +386,10 @@ jobs:
         shell: cmd
         timeout-minutes: 15
         run: |
+          echo on
           PATH %LUA_DIR%;C:\msys64\mingw64\bin;%PATH%;%PYTHON3_DIR%;%RACKET_DIR%\lib
           call "%VCVARSALL%" %VCARCH%
+          ping 127.0.0.1 -n 6 > nul
           echo %COL_GREEN%Test gVim:%COL_RESET%
           cd vim\src\testdir
           nmake -nologo -f Make_mvc.mak clean
