@@ -113,15 +113,14 @@ jobs:
       - name: Create a list of download URLs
         shell: cmd
         run: |
-          setlocal ENABLEDELAYEDEXPANSION
           type NUL > urls.txt
-          echo %LUA_RELEASE%>> urls.txt
-          echo %WINPTY_URL%>> urls.txt
-          echo %GETTEXT_URL%>> urls.txt
-          echo %RUBY_URL%>> urls.txt
-          echo %PERL_URL%>> urls.txt
-          echo %UPX_URL%>> urls.txt
-          echo %SHELLEXECASUSER_URL%>> urls.txt
+          call echo %LUA_RELEASE%>> urls.txt
+          call echo %WINPTY_URL%>> urls.txt
+          call echo %GETTEXT_URL%>> urls.txt
+          call echo %RUBY_URL%>> urls.txt
+          call echo %PERL_URL%>> urls.txt
+          call echo %UPX_URL%>> urls.txt
+          call echo %SHELLEXECASUSER_URL%>> urls.txt
           type urls.txt
 
       - name: Cache downloaded files
@@ -159,6 +158,7 @@ jobs:
 
           echo on
           echo %COL_GREEN%Updating MSYS2%COL_RESET%
+          C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -Syu --needed --noconfirm gettext base-devel mingw-w64-x86_64-toolchain"
           C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -l -c "pacman -Syu --needed --noconfirm gettext base-devel mingw-w64-x86_64-toolchain"
           echo off
 
