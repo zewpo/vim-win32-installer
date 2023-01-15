@@ -134,7 +134,7 @@ jobs:
         run: |
           path C:\Program Files\7-Zip;%PYTHON_DIR%;%PYTHON3_DIR%;%PERL_DIR%\bin;%path%;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib
           call "%VCVARSALL%" %VCARCH%
-          timeout 2 > nul
+          ping 127.0.0.1 -n 6 > nul
           if not exist downloads mkdir downloads
 
           echo %COL_GREEN%Download Lua%COL_RESET%
@@ -213,7 +213,7 @@ jobs:
         shell: cmd
         run: |
           call "%VCVARSALL%" %VCARCH%
-          timeout 2 > nul
+          ping 127.0.0.1 -n 6 > nul
           cd vim\src
           nmake -nologo -f Make_mvc.mak ^
             FEATURES=HUGE POSTSCRIPT=yes DEBUG=no ^
@@ -236,11 +236,13 @@ jobs:
           @echo on
           setlocal ENABLEDELAYEDEXPANSION
 
-          for /f "tokens=4,5 delims=.- " %%i in ('vim --version ^| find "IMproved"') do (
+          cd vim\src
+
+          for /f "tokens=4,5 delims=.- " %%i in ('.\vim.exe --version ^| find "IMproved"') do (
             set TAG_NAME_I=%%i
             set TAG_NAME_J=%%j
           )
-          for /f "tokens=4 delims=.- " %%k in ('vim --version ^| find "patches"') do (
+          for /f "tokens=4 delims=.- " %%k in ('.\vim.exe --version ^| find "patches"') do (
               set TAG_NAME_J=%%k
           )
           set TAG_NAME=%TAG_NAME_I%.%TAG_NAME_J%.%TAG_NAME_K%
@@ -249,13 +251,11 @@ jobs:
 
           for /f "delims=. tokens=1-3" %%i in ("%TAG_NAME%") do set PATCHLEVEL=%%k
 
-          cd vim\src
-  
           echo %COL_GREEN%Build ONLY 64-bit version of gvimext.dll for the installer%COL_RESET%
           mkdir GvimExt64
           
           call "%VCVARSALL%" %VCARCH%
-          timeout 2 > nul
+          ping 127.0.0.1 -n 6 > nul
           pushd GvimExt
           nmake -f Make_mvc.mak CPU=AMD64 clean all > ..\gvimext.log
           popd
