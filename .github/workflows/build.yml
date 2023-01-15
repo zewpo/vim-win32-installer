@@ -109,7 +109,6 @@ jobs:
         run: |
           git submodule update --init
           git submodule update --remote
-          git submodule foreach --recursive "git fetch --tags"
 
       - name: Create a list of download URLs
         shell: cmd
@@ -122,6 +121,7 @@ jobs:
           echo %PERL_URL%>> urls.txt
           echo %UPX_URL%>> urls.txt
           echo %SHELLEXECASUSER_URL%>> urls.txt
+          type urls.txt
 
       - name: Cache downloaded files
         uses: actions/cache@v3
@@ -281,13 +281,13 @@ jobs:
 
           copy /Y winpty* ..\runtime\
           copy /Y winpty* ..\..\
-          set dir=vim%TAG_NAME:~1,1%%TAG_NAME:~3,1%
+          set dir=vim%TAG_NAME_I%TAG_NAME_J%
           mkdir ..\vim\%dir%
           xcopy ..\runtime ..\vim\%dir% /Y /E /V /I /H /R /Q
           7z a ..\..\gvim_%TAG_NAME:~1%_x64.zip ..\vim
 
           set CHERE_INVOKING=1
-          C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -lc "pwd && ls -al && touch ../../src/auto/config.mk && make uganda.nsis.txt"
+          C:\msys64\usr\bin\env MSYSTEM=MINGW64 c:\msys64\usr\bin\bash -lc "cd ../runtime/doc && touch ../../src/auto/config.mk && make uganda.nsis.txt"
           copy gvim.exe gvim_ole.exe
           copy vim.exe vimw32.exe
           copy tee\tee.exe teew32.exe
