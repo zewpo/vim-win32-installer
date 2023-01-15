@@ -59,7 +59,7 @@ jobs:
       RUBY_BRANCH: ruby_3_2
       RUBY_RELEASE: 3.2.0-1
       RUBY_SRC_URL: https://github.com/ruby/ruby/archive/%RUBY_BRANCH%.zip
-      RUBY_URL: https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-%RUBY_RELEASE%/rubyinstaller-%RUBY_RELEASE%-%WARCH%.7z
+      RUBY_URL: https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-%RUBY_RELEASE%/rubyinstaller-%RUBY_RELEASE%-x64.7z
       RUBY_DIR: D:\Ruby32-x64
       # libsodium
       LIBSODIUM_URL: https://github.com/jedisct1/libsodium/releases/download/1.0.18-RELEASE/libsodium-1.0.18-msvc.zip
@@ -150,8 +150,8 @@ jobs:
           echo %COL_GREEN%Download WinPTY%COL_RESET%
           call :downloadfile %WINPTY_URL% downloads\winpty.zip
           7z x -y downloads\winpty.zip -oD:\winpty > nul || exit 1
-          copy /Y D:\winpty\%WARCH%\bin\winpty.dll        vim\src\winpty64.dll
-          copy /Y D:\winpty\%WARCH%\bin\winpty-agent.exe  vim\src\
+          copy /Y D:\winpty\x64\bin\winpty.dll        vim\src\winpty64.dll
+          copy /Y D:\winpty\x64\bin\winpty-agent.exe  vim\src\
 
           echo %COL_GREEN%Download 64 bit GetText libintl.dll and iconv.dll%COL_RESET%
           call :downloadfile %GETTEXT64_URL% downloads\gettext64.zip
@@ -162,8 +162,8 @@ jobs:
           echo %COL_GREEN%Download 32 bit GetText libintl.dll and iconv.dll%COL_RESET%
           call :downloadfile %GETTEXT32_URL% downloads\gettext32.zip
           7z e -y downloads\gettext32.zip -oD:\gettext32 > nul || exit 1
-          copy /Y D:\gettext32\libiconv-2.dll   vim\src\
-          copy /Y D:\gettext32\libintl-8.dll    vim\src\
+          @REM copy /Y D:\gettext32\libiconv-2.dll   vim\src\
+          @REM copy /Y D:\gettext32\libintl-8.dll    vim\src\
           
 
           @REM echo %COL_GREEN%Updating MSYS2%COL_RESET%
@@ -173,7 +173,7 @@ jobs:
           call :downloadfile %RUBY_URL% downloads\ruby.7z
           @echo on
           7z x downloads\ruby.7z -oD:\ > nul || exit 1
-          move D:\rubyinstaller-%RUBY_RELEASE%-%WARCH% %RUBY_DIR% > nul || exit 1
+          move D:\rubyinstaller-%RUBY_RELEASE%-x64 %RUBY_DIR% > nul || exit 1
           call :downloadfile %RUBY_SRC_URL% downloads\ruby_src.zip
           7z x downloads\ruby_src.zip -aoa -o..  > nul || exit 1
           move ..\ruby-%RUBY_BRANCH% ..\ruby > nul || exit 1
