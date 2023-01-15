@@ -147,11 +147,11 @@ jobs:
           call :downloadfile %PERL_URL% downloads\perl.zip
           7z x downloads\perl.zip perl -o%PERL_DIR%\.. > nul || exit 1
 
-          echo %COL_GREEN%Download WinPTY%COL_RESET%
-          call :downloadfile %WINPTY_URL% downloads\winpty.zip
-          7z x -y downloads\winpty.zip -oD:\winpty > nul || exit 1
-          copy /Y D:\winpty\x64\bin\winpty.dll        vim\src\winpty64.dll
-          copy /Y D:\winpty\x64\bin\winpty-agent.exe  vim\src\
+          @REM echo %COL_GREEN%Download WinPTY%COL_RESET%
+          @REM call :downloadfile %WINPTY_URL% downloads\winpty.zip
+          @REM 7z x -y downloads\winpty.zip -oD:\winpty > nul || exit 1
+          @REM copy /Y D:\winpty\x64\bin\winpty.dll        vim\src\winpty64.dll
+          @REM copy /Y D:\winpty\x64\bin\winpty-agent.exe  vim\src\
 
           echo %COL_GREEN%Download 64 bit GetText libintl.dll and iconv.dll%COL_RESET%
           call :downloadfile %GETTEXT64_URL% downloads\gettext64.zip
@@ -194,6 +194,7 @@ jobs:
           call :downloadfile %RACKET_URL% downloads\racket.tgz
           7z x -tgzip -so downloads/racket.tgz | 7z x -aoa -si -ttar -oD:\
           type NUL > %RACKET_DIR%\include\bc_suffix.h
+          where raco
           raco pkg install --auto r5rs-lib
 
           echo %COL_GREEN%Download Installer UPX%COL_RESET%
@@ -353,8 +354,8 @@ jobs:
           copy /Y D:\gettext64\libiconv-2.dll   ..\runtime\
           copy /Y D:\gettext64\libintl-8.dll    ..\runtime\
 
-          copy /Y winpty* ..\runtime\
-          copy /Y winpty* ..\..\
+          @REM copy /Y winpty* ..\runtime\
+          @REM copy /Y winpty* ..\..\
           set dir=vim%TAG_NAME_I%%TAG_NAME_J%
           mkdir ..\vim\%dir%
           xcopy ..\runtime ..\vim\%dir% /Y /E /V /I /H /R /Q
