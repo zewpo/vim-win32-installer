@@ -236,7 +236,7 @@ jobs:
 
           for /f "tokens=5" %%i in ('vim\src\vim.exe --version ^| find "IMproved"') do set TAG_NAME_A_B=%%i
           for /f "tokens=3" %%i in ('vim\src\vim.exe --version ^| find "patches"') do set TAG_NAME_C=%%i
-          call set TAG_NAME=vzewpo%%TAG_NAME_A_B:~0,-1%%.%%TAG_NAME_C:~2,-1%%
+          call set TAG_NAME=vzewpo%TAG_NAME_A_B%.%TAG_NAME_C%
 
           echo %TAG_NAME%
 
