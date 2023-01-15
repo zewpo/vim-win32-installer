@@ -250,7 +250,7 @@ jobs:
           nmake -f Make_mvc.mak GETTEXT_PATH=C:\msys64\usr\bin VIMRUNTIME=..\..\runtime install-all || exit 1
           popd
 
-      - name: Test Vim and show the results
+      - name: Test Vim
         shell: cmd
         timeout-minutes: 15
         run: |
@@ -267,7 +267,7 @@ jobs:
           nmake -nologo -f Make_mvc.mak clean
           nmake -nologo -f Make_mvc.mak VIMPROG=..\vim || exit 1
 
-      - name: Test gVim and show the results
+      - name: Test gVim
         shell: cmd
         timeout-minutes: 15
         run: |
