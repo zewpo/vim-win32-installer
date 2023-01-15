@@ -235,6 +235,9 @@ jobs:
         run: |
           @echo on
           setlocal ENABLEDELAYEDEXPANSION
+          call "%VCVARSALL%" %VCARCH%
+          @echo on
+          ping 127.0.0.1 -n 6
 
           cd vim\src
 
@@ -251,10 +254,6 @@ jobs:
 
           echo %COL_GREEN%Build ONLY 64-bit version of gvimext.dll for the installer%COL_RESET%
           mkdir GvimExt64
-          
-          call "%VCVARSALL%" %VCARCH%
-          @echo on
-          ping 127.0.0.1 -n 6
           pushd GvimExt
           nmake -f Make_mvc.mak CPU=AMD64 clean all > ..\gvimext.log
           popd
@@ -303,7 +302,6 @@ jobs:
           "%ProgramFiles(x86)%\NSIS\makensis" /DVIMRT=..\runtime /DGETTEXT=D:\ /DWIN64=1 /DPATCHLEVEL=%PATCHLEVEL% gvim.nsi "/XOutFile ..\..\gvim_%TAG_NAME:~1%_x64.exe"
           popd
           7z a unsigned-gvim_%TAG_NAME:~1%_x64.zip gvim_%TAG_NAME:~1%_x64.zip gvim*.exe
-
 
 
       - name: Check version
