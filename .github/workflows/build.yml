@@ -225,10 +225,14 @@ jobs:
       - name: Build (MSVC)
         shell: cmd
         run: |
-          PATH C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+          path C:\Windows\system32;C:\Windows
           call "%VCVARSALL%" %VCARCH%
-          @echo on
-          path %PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;%PATH%
+          path %RACKET_DIR%;%RACKET_DIR%\lib;%PATH%
+          path %RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%PATH%
+          path %LUA_DIR%;%PATH%
+          path %PERL_DIR%\bin;%PATH%
+          path %PYTHON3_DIR%;%PYTHON_DIR%;%PATH%
+
           path
           cd vim\src
           set VIM_NMAKE_ARGS=FEATURES=HUGE POSTSCRIPT=yes DEBUG=no ^
@@ -254,12 +258,15 @@ jobs:
         shell: cmd
         timeout-minutes: 15
         run: |
-          setlocal ENABLEDELAYEDEXPANSION ENABLEEXTENSIONS
-          @echo on
-          path C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+          path C:\Windows\system32;C:\Windows
+          path C:\msys64\mingw64\bin;c:\msys64\usr\bin;%PATH%
           call "%VCVARSALL%" %VCARCH%
-          @echo on
-          path %GITHUB_WORKSPACE%\vim\src;%GITHUB_WORKSPACE%;%GITHUB_WORKSPACE%\vim\src\tee;%GITHUB_WORKSPACE%\vim\src\xxd;%PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%PYTHON_DIR%;C:\msys64\mingw64\bin;c:\msys64\usr\bin;%PATH%
+          path %RACKET_DIR%;%RACKET_DIR%\lib;%PATH%
+          path %RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%PATH%
+          path %LUA_DIR%;%PATH%
+          path %PERL_DIR%\bin;%PATH%
+          path %PYTHON3_DIR%;%PYTHON_DIR%;%PATH%
+          path %GITHUB_WORKSPACE%\vim\src;%GITHUB_WORKSPACE%;%GITHUB_WORKSPACE%\vim\src\tee;%GITHUB_WORKSPACE%\vim\src\xxd;%PATH%
           path
 
           echo %COL_GREEN%Test Vim:%COL_RESET%
@@ -271,12 +278,15 @@ jobs:
         shell: cmd
         timeout-minutes: 15
         run: |
-          setlocal ENABLEDELAYEDEXPANSION ENABLEEXTENSIONS
-          @echo on
-          path C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+          path C:\Windows\system32;C:\Windows
+          path C:\msys64\mingw64\bin;c:\msys64\usr\bin;%PATH%
           call "%VCVARSALL%" %VCARCH%
-          @echo on
-          path %GITHUB_WORKSPACE%\vim\src;%GITHUB_WORKSPACE%;%GITHUB_WORKSPACE%\vim\src\tee;%GITHUB_WORKSPACE%\vim\src\xxd;%PYTHON3_DIR%;%PERL_DIR%\bin;%LUA_DIR%;%RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%RACKET_DIR%;%RACKET_DIR%\lib;%AppData%\Racket\8.7-bc;%PYTHON_DIR%;C:\msys64\mingw64\bin;c:\msys64\usr\bin;%PATH%
+          path %RACKET_DIR%;%RACKET_DIR%\lib;%PATH%
+          path %RUBY_DIR%\bin;%RUBY_DIR%\bin\ruby_builtin_dlls;%PATH%
+          path %LUA_DIR%;%PATH%
+          path %PERL_DIR%\bin;%PATH%
+          path %PYTHON3_DIR%;%PYTHON_DIR%;%PATH%
+          path %GITHUB_WORKSPACE%\vim\src;%GITHUB_WORKSPACE%;%GITHUB_WORKSPACE%\vim\src\tee;%GITHUB_WORKSPACE%\vim\src\xxd;%PATH%
           path
 
           echo %COL_GREEN%Test gVim:%COL_RESET%
